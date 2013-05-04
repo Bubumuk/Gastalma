@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gastos.gastalma"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+    <!-- HoloEverywhere: android:name="org.holoeverywhere.app.Application" -->
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+        <activity
+            android:name="com.gastos.gastalma.MenuActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.GastosActivity"
+            android:label="@string/title_activity_gastos"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.AgregarGastoActivity"
+            android:label="@string/title_activity_agregar_gasto"
+            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.GastosActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.IngresosActivity"
+            android:label="@string/title_activity_ingresos"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.AgregarIngresoActivity"
+            android:label="@string/title_activity_agregar_ingreso" >
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.DeudasActivity"
+            android:label="@string/title_activity_deudas"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.PrefsActivity"
+            android:label="@string/title_activity_prefs"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity"
+            android:theme="@style/Theme.Sherlock" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.ReportesGastosActivity"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.ReportesIngresosActivity"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
+    </application>
+
+</manifest>

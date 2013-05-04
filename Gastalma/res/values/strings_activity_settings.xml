@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Strings related to Settings -->
+
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="porcentaje_de_pago">Porcentaje de pago</string>
+    <string name="dia_de_pago">Día de pago</string>
+
+    <string-array name="dias_de_pago">
+        <item >1</item>
+        <item >2</item>
+        <item >3</item>
+        <item >4</item>
+        <item >5</item>
+        <item >6</item>
+        <item >7</item>
+        <item >8</item>
+        <item >9</item>
+        <item >10</item>
+        <item >11</item>
+        <item >12</item>
+        <item >13</item>
+        <item >14</item>
+        <item >15</item>
+        <item >16</item>
+        <item >17</item>
+        <item >18</item>
+        <item >19</item>
+        <item >20</item>
+        <item >21</item>
+        <item >22</item>
+        <item >23</item>
+        <item >24</item>
+        <item >25</item>
+        <item >26</item>
+        <item >27</item>
+        <item >28</item>
+        <item >29</item>
+        <item >30</item>
+    </string-array>
+
+    <!-- settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+    
+    
+    
+    <string name="library_name">HoloEverywhere</string>
+    
+    <string name="preference_base">Base</string>
+    <string name="preference_check_box_summary_off">I not checked ;(</string>
+    <string name="preference_check_box_summary_on">I checked! :)</string>
+    <string name="preference_check_box_title">CheckBox</string>
+    <string name="preference_edit_text_dialog_title">I\'m listening</string>
+    <string name="preference_edit_text_summary">Tap me!</string>
+    <string name="preference_edit_text_title">EditText</string>
+    <string name="preference_list_dialog_title">@string/preference_list_summary</string>
+    <string name="preference_list_summary">Skillet</string>
+    <string name="preference_list_title">List</string>
+    <string name="preference_lists">Lists</string>
+    <string name="preference_multi_list_dialog_title">@string/preference_multi_list_summary</string>
+    <string name="preference_multi_list_summary">Nirvana</string>
+    <string name="preference_multi_list_title">MultiSelectList</string>
+    <string name="preference_number_picker_dialog_title">Play to roulette!</string>
+    <string name="preference_number_picker_summary">Numbers... Hm.</string>
+    <string name="preference_number_picker_title">NumberPicker</string>
+    <string name="preference_ringtone_summary">I love music!</string>
+    <string name="preference_ringtone_title">Ringtone</string>
+    <string name="preference_seek_bar">SeekBar</string>
+    <string name="preference_seek_bar_dialog">SeekBarDialog</string>
+    <string name="preference_summary">Preference Demo</string>
+    <string name="preference_switch_summary_off">Noooooo! ;(</string>
+    <string name="preference_switch_summary_on">I love world! :)</string>
+    <string name="preference_switch_title">Switch</string>
+    <string name="preference_title">@string/library_name</string>
+    <string name="preference_unsupported">Unsupported preferences</string>
+    <string name="preference_volume">Volume</string>
+
+</resources>
