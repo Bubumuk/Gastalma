@@ -1,6 +1,8 @@
 package com.gastos.gastalma;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.gastos.db.GastosDBHelper;
 
 import android.os.Build;
@@ -10,7 +12,6 @@ import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -38,9 +39,13 @@ public class MenuActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
 
-		menu.add(Menu.NONE, 1, Menu.NONE, "Configuración")
-		.setIcon(com.actionbarsherlock.R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		SubMenu subMenu = menu.addSubMenu("Configuración");
+        subMenu.add(Menu.NONE, 1, Menu.NONE, "Configuración");
+        subMenu.add("Acerca de");
+
+        MenuItem subMenuItem = subMenu.getItem();
+        subMenuItem.setIcon(com.actionbarsherlock.R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
+        subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;
 	}
