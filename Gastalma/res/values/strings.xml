@@ -63,5 +63,6 @@
     <string name="title_activity_reportes">Reportes</string>
     <string name="pagar_m_nimo">Pagar mínimo</string>
     <string name="cantidad_a_pagar">Cantidad a pagar</string>
+    <string name="title_activity_historial">Historial de Gastos</string>
 
 </resources>

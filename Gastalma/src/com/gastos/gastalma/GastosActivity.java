@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.SubMenu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
@@ -83,9 +84,12 @@ public class GastosActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
 
-        menu.add(Menu.NONE, 1, Menu.NONE, "agregar")
-        	//.setIcon(android.R.drawable.ic_menu_add)
-        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		SubMenu subMenu = menu.addSubMenu("Agregar");
+        subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
+        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");
+
+        com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
+        subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         
         return true;
 	}
@@ -106,6 +110,9 @@ public class GastosActivity extends SherlockActivity {
 				return true;
 			case 1:
 				ViewAgregarGastos();
+	            break;
+			case 2:
+				ViewGastosHistorial();
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -166,6 +173,11 @@ public class GastosActivity extends SherlockActivity {
 	
 	public void ViewAgregarGastos() {
 		Intent myIntent = new Intent(this, AgregarGastoActivity.class);
+		startActivityForResult(myIntent, 0);
+	}
+	
+	public void ViewGastosHistorial() {
+		Intent myIntent = new Intent(this, GastosHistorialActivity.class);
 		startActivityForResult(myIntent, 0);
 	}
 	

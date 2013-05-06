@@ -1,5 +1,8 @@
 package com.gastos.gastalma;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import net.kapati.widgets.DatePicker;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -147,11 +150,20 @@ public class AgregarGastoActivity extends SherlockActivity {
 				dp1.getDate(),
 				Double.parseDouble(txt2.getText().toString()),
 				txt3.getText().toString(),
-				(rr.isChecked() ? "Débito" : "Crédito"));
+				(rr.isChecked() ? "Débito" : "Crédito"),
+				getTime());
 		
 		toast = Toast.makeText(getApplicationContext(), "Elemento agregado", Toast.LENGTH_SHORT);
 		toast.show();
 	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public String getTime() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.getTime();
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss a");
+    	return sdf.format(cal.getTime());
+    }
 	
 	public void GastoActualizado() {
 		actualizarGasto();

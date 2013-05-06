@@ -17,7 +17,8 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"año TEXT," +
     		"costo NUMERIC," +
     		"descripcion TEXT," +
-    		"tipo TEXT)";
+    		"tipo TEXT" +
+    		"hora TEXT)";
     
     //Sentencia SQL para crear la tabla de Ingresos
     private String sqlCreateIngresos = "CREATE TABLE Ingresos (" +

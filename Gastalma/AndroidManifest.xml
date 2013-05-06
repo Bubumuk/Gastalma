@@ -81,6 +81,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
         </activity>
+        <activity
+            android:name="com.gastos.gastalma.GastosHistorialActivity"
+            android:label="@string/title_activity_historial"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.GastosActivity" />
+        </activity>
     </application>
 
 </manifest>

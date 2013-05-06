@@ -38,7 +38,7 @@ public class GastosDBHelper {
 		return "";
 	}
 	
-	public boolean insertarGasto(String nombre, String fecha, Double costo, String descripcion, String tipo) {
+	public boolean insertarGasto(String nombre, String fecha, Double costo, String descripcion, String tipo, String hora) {
 		
 		//Creamos el registro a insertar como objeto ContentValues
 		ContentValues gasto = new ContentValues();
@@ -50,6 +50,7 @@ public class GastosDBHelper {
 		gasto.put("costo", costo);
 		gasto.put("descripcion", descripcion);
 		gasto.put("tipo", tipo);
+		gasto.put("hora", hora);
 		 
 		//Insertamos el registro en la base de datos
 		int exito = (int)db.insert("Gastos", null, gasto);
@@ -94,6 +95,18 @@ public class GastosDBHelper {
 	public Cursor fetchGastos(String fecha) {
 		
 		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "id" }, "fecha=?", new String[] { fecha }, null, null, null);
+		return c;
+	}
+	
+	public Cursor fetchGastos() {
+		
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, null, null, null, null, null);
+		return c;
+	}
+	
+	public Cursor fetchGastosHistorial() {
+		
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, null, null, "nombre", null, null);
 		return c;
 	}
 	
