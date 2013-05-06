@@ -94,13 +94,13 @@ public class GastosDBHelper {
 
 	public Cursor fetchGastos() {
 		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, null, null, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, "", null, null, null, null);
 		return c;
 	}
 	
 	public Cursor fetchGastosHistorial() {
 		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, null, null, "nombre", null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, "", null, "nombre", null, null);
 		return c;
 	}
 	

@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosHistorialAdapter;
@@ -21,7 +25,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -29,7 +32,6 @@ public class GastosHistorialActivity extends SherlockActivity {
 
 	private GastosDBHelper dbHelper;
 	private ListView listView;
-	private EditText editText;
 	private ArrayAdapter<Gasto> adapter;
 
 	private Toast toast;
@@ -41,11 +43,9 @@ public class GastosHistorialActivity extends SherlockActivity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
-		editText = (EditText)findViewById(R.id.inputSearch);
-		
 		listView = (ListView)findViewById(R.id.listView1);
 		
-		listView.requestFocus();
+		listView.setEmptyView(findViewById(R.id.textViewEmpty));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -68,6 +68,35 @@ public class GastosHistorialActivity extends SherlockActivity {
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        //Create the search view
+        SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
+        searchView.setQueryHint("Buscar..");
+
+        menu.add("Search")
+            .setIcon(R.drawable.abs__ic_search)
+            .setActionView(searchView)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        
+        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				adapter.getFilter().filter(newText);
+				return false;
+			}
+		});
+
+        return true;
+    }
 	
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {

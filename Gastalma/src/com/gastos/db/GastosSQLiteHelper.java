@@ -17,7 +17,7 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"año TEXT," +
     		"costo NUMERIC," +
     		"descripcion TEXT," +
-    		"tipo TEXT" +
+    		"tipo TEXT," +
     		"hora TEXT)";
     
     //Sentencia SQL para crear la tabla de Ingresos
@@ -28,7 +28,7 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"dia TEXT," +
     		"mes TEXT," +
     		"año TEXT," +
-    		"descripcion TEXT" +
+    		"descripcion TEXT," +
     		"hora TEXT)";
     
     //Sentencia SQL para crear la tabla de Pagos
@@ -39,7 +39,7 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"fecha TEXT," +
     		"dia TEXT," +
     		"mes TEXT," +
-    		"año TEXT" +
+    		"año TEXT," +
     		"hora TEXT)";
  
     public GastosSQLiteHelper(Context contexto, String nombre, CursorFactory factory, int version) {
