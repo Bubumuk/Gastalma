@@ -28,7 +28,8 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"dia TEXT," +
     		"mes TEXT," +
     		"año TEXT," +
-    		"descripcion TEXT)";
+    		"descripcion TEXT" +
+    		"hora TEXT)";
     
     //Sentencia SQL para crear la tabla de Pagos
     private String sqlCreatePagos = "CREATE TABLE Pagos (" +
@@ -38,7 +39,8 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     		"fecha TEXT," +
     		"dia TEXT," +
     		"mes TEXT," +
-    		"año TEXT)";
+    		"año TEXT" +
+    		"hora TEXT)";
  
     public GastosSQLiteHelper(Context contexto, String nombre, CursorFactory factory, int version) {
         super(contexto, nombre, factory, version);
