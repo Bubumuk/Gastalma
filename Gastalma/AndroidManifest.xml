@@ -84,11 +84,19 @@
         <activity
             android:name="com.gastos.gastalma.GastosHistorialActivity"
             android:label="@string/title_activity_historial"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            android:parentActivityName="com.gastos.gastalma.GastosActivity"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.GastosActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.IngresosHistorialActivity"
+            android:label="@string/title_activity_ingresos_historial"
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.IngresosActivity" />
         </activity>
     </application>
 

@@ -66,7 +66,7 @@ public class GastosActivity extends SherlockActivity {
 	
 	private void populateListaGastos() {
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
-		Cursor c = dbHelper.fetchGastos(fDate);
+		Cursor c = dbHelper.fetchGastosDia(fDate);
 		//Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros

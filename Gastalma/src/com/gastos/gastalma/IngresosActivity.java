@@ -25,6 +25,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.SubMenu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
@@ -45,7 +46,7 @@ public class IngresosActivity extends SherlockActivity {
 		Locale loc = new Locale("es","MX");
 		Date cDate = new Date();
 		fDate = new SimpleDateFormat("MMMM", loc).format(cDate);
-		lDate = new SimpleDateFormat("MM", loc).format(cDate);
+		lDate = new SimpleDateFormat("dd/MM/yyyy", loc).format(cDate);
 		TextView t = (TextView)findViewById(R.id.textView1);
 		t.setText(fDate.toUpperCase());
 		
@@ -97,7 +98,7 @@ public class IngresosActivity extends SherlockActivity {
 	private void populateListaIngresos() {
 		
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
-		Cursor c = dbHelper.fetchIngresos(lDate);
+		Cursor c = dbHelper.fetchIngresosMes(lDate);
 		//Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
@@ -123,8 +124,12 @@ public class IngresosActivity extends SherlockActivity {
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
 
-        menu.add(Menu.NONE, 1, Menu.NONE, "agregar")
-        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		SubMenu subMenu = menu.addSubMenu("Agregar");
+        subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
+        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");
+
+        com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
+        subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         
         return true;
 	}
@@ -145,6 +150,9 @@ public class IngresosActivity extends SherlockActivity {
 				return true;
 			case 1:
 				ViewAgregarIngresos();
+	            break;
+			case 2:
+				ViewIngresosHistorial();
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -176,6 +184,11 @@ public class IngresosActivity extends SherlockActivity {
 	
 	public void ViewAgregarIngresos() {
 		Intent myIntent = new Intent(this, AgregarIngresoActivity.class);
+		startActivityForResult(myIntent, 0);
+	}
+	
+	public void ViewIngresosHistorial() {
+		Intent myIntent = new Intent(this, IngresosHistorialActivity.class);
 		startActivityForResult(myIntent, 0);
 	}
 	

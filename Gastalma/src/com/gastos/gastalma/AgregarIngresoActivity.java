@@ -1,5 +1,8 @@
 package com.gastos.gastalma;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import net.kapati.widgets.DatePicker;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -148,7 +151,8 @@ public class AgregarIngresoActivity extends SherlockActivity {
 		dbHelper.insertarIngreso(
 				Double.parseDouble(txt2.getText().toString()),
 				dp1.getDate(),
-				txt3.getText().toString());
+				txt3.getText().toString(),
+				getTime());
 		
 		toast = Toast.makeText(getApplicationContext(), "Elemento agregado" , Toast.LENGTH_SHORT);
 		toast.show();
@@ -172,6 +176,14 @@ public class AgregarIngresoActivity extends SherlockActivity {
         }
         
         return allValid;
+    }
+	
+	@SuppressLint("SimpleDateFormat")
+	public String getTime() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.getTime();
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss a");
+    	return sdf.format(cal.getTime());
     }
 
 }

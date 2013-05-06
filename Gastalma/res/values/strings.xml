@@ -64,5 +64,7 @@
     <string name="pagar_m_nimo">Pagar mínimo</string>
     <string name="cantidad_a_pagar">Cantidad a pagar</string>
     <string name="title_activity_historial">Historial de Gastos</string>
+    <string name="title_activity_ingresos_historial">Historial de Ingresos</string>
+    <string name="buscar_">Buscar..</string>
 
 </resources>

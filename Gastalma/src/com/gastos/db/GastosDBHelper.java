@@ -92,12 +92,6 @@ public class GastosDBHelper {
 		return exito > 0 ? true : false;
 	}
 
-	public Cursor fetchGastos(String fecha) {
-		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "id" }, "fecha=?", new String[] { fecha }, null, null, null);
-		return c;
-	}
-	
 	public Cursor fetchGastos() {
 		
 		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, null, null, null, null, null);
@@ -128,7 +122,7 @@ public class GastosDBHelper {
 		return c;
 	}
 	
-	public boolean insertarIngreso(Double cantidad, String fecha, String descripcion) {
+	public boolean insertarIngreso(Double cantidad, String fecha, String descripcion, String hora) {
 		
 		//Creamos el registro a insertar como objeto ContentValues
 		ContentValues ingreso = new ContentValues();
@@ -138,6 +132,7 @@ public class GastosDBHelper {
 		ingreso.put("mes", separarFecha(fecha, 2));
 		ingreso.put("año", separarFecha(fecha, 3));
 		ingreso.put("descripcion", descripcion);
+		ingreso.put("hora", hora);
 		 
 		//Insertamos el registro en la base de datos
 		int exito = (int)db.insert("Ingresos", null, ingreso);
@@ -177,9 +172,9 @@ public class GastosDBHelper {
 		return exito > 0 ? true : false;
 	}
 	
-	public Cursor fetchIngresos(String mes) {
+	public Cursor fetchIngresos() {
 		
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, "mes=?", new String[] { mes }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, null, null, null, null, "fecha DESC");
 		return c;
 	}
 	
