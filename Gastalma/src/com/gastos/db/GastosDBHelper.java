@@ -178,6 +178,12 @@ public class GastosDBHelper {
 		return c;
 	}
 	
+	public Cursor fetchIngresosHistorial() {
+		
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, null, null, null, null, null);
+		return c;
+	}
+	
 	public Cursor fetchIngresosDia(String fecha) {
 
 		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, "fecha=?", new String[] { fecha }, null, null, "fecha DESC");

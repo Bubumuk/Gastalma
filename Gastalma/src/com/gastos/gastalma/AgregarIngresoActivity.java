@@ -17,12 +17,14 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import android.text.InputFilter;
 import android.text.format.DateFormat;
 import android.annotation.SuppressLint;
+import android.content.Context;
 
 public class AgregarIngresoActivity extends SherlockActivity {
 
@@ -109,6 +111,8 @@ public class AgregarIngresoActivity extends SherlockActivity {
                     @Override
                     public void onClick(View v) {
                         // "Discard"
+                    	hideKeyboard();
+                    	
                     	setResult(Activity.RESULT_CANCELED);
         				finish();
                     }
@@ -124,6 +128,8 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	
 	public void IngresoAgregado() {
 		agregarIngreso();
+
+		hideKeyboard();
 		
 		setResult(RESULT_OK);
 		finish();
@@ -132,8 +138,16 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	public void IngresoActualizado() {
 		actualizarIngreso();
 		
+		hideKeyboard();
+		
 		setResult(RESULT_OK);
 		finish();
+	}
+	
+	private void hideKeyboard() {
+		InputMethodManager inputManager = (InputMethodManager)
+				getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.toggleSoftInput(0, 0);
 	}
 	
 	private void actualizarIngreso() {

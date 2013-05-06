@@ -7,15 +7,17 @@ import java.util.Date;
 import java.util.List;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Ingreso;
-import com.gastos.utils.IngresosAdapter;
+import com.gastos.utils.IngresosHistorialAdapter;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,9 +31,8 @@ public class IngresosHistorialActivity extends SherlockActivity {
 
 	private ListView listView;
 	private GastosDBHelper dbHelper;
-	private IngresosAdapter adapter;
+	private IngresosHistorialAdapter adapter;
 	private Toast toast;
-	private EditText editText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +41,9 @@ public class IngresosHistorialActivity extends SherlockActivity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		
-		editText = (EditText)findViewById(R.id.inputSearch);
-		
 		listView = (ListView)findViewById(R.id.listView1);
 		
-		listView.requestFocus();
+		listView.setEmptyView(findViewById(R.id.textViewEmpty));
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -66,8 +65,37 @@ public class IngresosHistorialActivity extends SherlockActivity {
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        //Create the search view
+        SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
+        searchView.setQueryHint("Buscar..");
+
+        menu.add("Search")
+            .setIcon(R.drawable.abs__ic_search)
+            .setActionView(searchView)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        
+        searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				adapter.getFilter().filter(newText);
+				return false;
+			}
+		});
+
+        return true;
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,7 +117,7 @@ public class IngresosHistorialActivity extends SherlockActivity {
 	private void populateListaIngresos() {
 		
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
-		Cursor c = dbHelper.fetchIngresosMes(getDate());
+		Cursor c = dbHelper.fetchIngresosHistorial();
 		//Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
@@ -98,7 +126,7 @@ public class IngresosHistorialActivity extends SherlockActivity {
 		     } while(c.moveToNext());
 		}
 		
-        adapter = new IngresosAdapter(this,R.layout.list_row, lista_ingresos);
+        adapter = new IngresosHistorialAdapter(this, R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);
 	}
 	
@@ -126,9 +154,9 @@ public class IngresosHistorialActivity extends SherlockActivity {
 	
 	private void agregarIngreso(Ingreso ingreso) {
 		dbHelper.insertarIngreso(
-				Double.parseDouble(ingreso.getDescripcion()),
+				Double.parseDouble(ingreso.getCantidad()),
 				getDate(),
-				ingreso.getCantidad(),
+				ingreso.getDescripcion(),
 				getTime());
 		
 		toast = Toast.makeText(getApplicationContext(), "Elemento agregado" , Toast.LENGTH_SHORT);
