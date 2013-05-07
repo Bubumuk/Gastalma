@@ -8,14 +8,13 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/dia_de_pago"
-        android:summary="Hola Mundo"
         android:defaultValue="24" />
 
     <com.gastos.utils.SeekBarPreference
 		android:key="porciento_pago"
         android:title="Porcentaje de Pago"
         android:defaultValue="15"
-        android:text="%"
+        android:summary="15"
         android:max="40"
         app:min="0" />
 </PreferenceScreen>

@@ -84,7 +84,7 @@ public class IngresosActivity extends SherlockActivity {
 		Toast toast;
 		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
 		dbHelper.abrirLecturaBD(this);
-		if(dbHelper.eliminarIngreso(item.getCantidad() , item.getFecha())) {
+		if(dbHelper.eliminarIngreso(item.getId())) {
 			toast = Toast.makeText(getApplicationContext(), "Elemento eliminado", Toast.LENGTH_SHORT);
 			toast.show();
 			adapter.remove(item);

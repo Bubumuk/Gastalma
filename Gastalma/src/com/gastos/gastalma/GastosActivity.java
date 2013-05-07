@@ -160,7 +160,7 @@ public class GastosActivity extends SherlockActivity {
 		Toast toast;
 		Gasto item = (Gasto)listView.getItemAtPosition(position);
 		dbHelper.abrirLecturaBD(this);
-		if(dbHelper.eliminarGasto(item.getNombre() , fDate)) {
+		if(dbHelper.eliminarGasto(item.getId())) {
 			toast = Toast.makeText(getApplicationContext(), "Elemento eliminado", Toast.LENGTH_SHORT);
 			toast.show();
 			adapter.remove((Gasto)listView.getItemAtPosition(position));

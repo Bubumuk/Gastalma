@@ -43,15 +43,16 @@ public class DeudasActivity extends SherlockActivity {
 	private double deudaDouble;
 	private int porciento;
 	private View pagar_view;
-	SharedPreferences prefs;
-	DateTime dt, dt_pago;
-	double pago_min;
+	private SharedPreferences prefs;
+	private DateTime dt, dt_pago;
+	private double pago_min;
+	private AlertDialog editalert;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_deudas);
-		// Show the Up button in the action bar.
+		
 		setupActionBar();
 		
 		dbHelper = new GastosDBHelper();
@@ -77,11 +78,18 @@ public class DeudasActivity extends SherlockActivity {
         dia = prefs.getString("dia_pago", "24");
         porciento = prefs.getInt("porciento_pago", 15);
         
+        editalert = new AlertDialog.Builder(this)
+		.setTitle("Pagar deuda")
+		.setMessage("Cantidad mínima por pagar:")
+		.setView(pagar_view)
+		.setPositiveButton("Aceptar", null)
+		.create();
+        
         calcularPago();
 	}
 	
 	private void calcularPago() {
-		deuda = prefs.getString("deuda", dbHelper.fetchDeuda());
+		deuda = prefs.getString("deuda", "0");
         
         txt2.setText(nf.format(Double.parseDouble(deuda)));
         
@@ -135,11 +143,11 @@ public class DeudasActivity extends SherlockActivity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-		//Used to put dark icons on light action bar
 
-
-		menu.add(Menu.NONE, 1, Menu.NONE, "pagar")
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		if(deudaDouble > 0) {
+			menu.add(Menu.NONE, 1, Menu.NONE, "pagar")
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		}
 		
         return true;
 	}
@@ -159,36 +167,29 @@ public class DeudasActivity extends SherlockActivity {
 			
 				return true;
 			case 1:
+				pagarDeuda();
 				/*
-				if(deudaDouble > 0) {
-					pagarDeuda();
-				} else {
-					Toast.makeText(this, "No hay deudas .D", Toast.LENGTH_SHORT).show();
-				}
-				*/
 				Crouton.makeText(
 						this, 
 						CroutonAlert.alert_string, 
 						CroutonAlert.alertStyle())
-						.show();
+						.show();*/
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	private void pagarDeuda() {
-		
-		final AlertDialog editalert = new AlertDialog.Builder(this)
-			.setTitle("Pagar deuda")
-			.setMessage("Cantidad mínima por pagar:")
-			.setView(pagar_view)
-			.setPositiveButton("Aceptar", null)
-			.create();
 		
 		editalert.setOnShowListener(new DialogInterface.OnShowListener() {
 
 		    @Override
 		    public void onShow(DialogInterface dialog) {
+		    	
+		    	input.setText(String.format("%.2f", pago_min));
+		    	chmin.setChecked(true);
+		    	
 
 		        Button b = editalert.getButton(AlertDialog.BUTTON_POSITIVE);
 		        b.setOnClickListener(new View.OnClickListener() {
@@ -196,21 +197,34 @@ public class DeudasActivity extends SherlockActivity {
 		            @Override
 		            public void onClick(View view) {
 		            	//Set new deuda to prefs
-		            	SharedPreferences.Editor editor = prefs.edit();
 		            	
-		            	double pago = Double.parseDouble(input.getText().toString());
-		            	double deuda_nueva = deudaDouble - pago;
-		            	if(deuda_nueva < 0) {
-		            		//set error
-		            		input.setError("Número negativo");
-		            	} else {
-		            		editor.putString("deuda", deudaDouble + "");
-			                editor.commit();
-			                calcularPago();
-			                
-			                //Dismiss once everything is OK.
-			                editalert.dismiss();
+		            	String pagoStr = input.getText().toString();
+
+		            	if(!pagoStr.isEmpty()) {
+		            		SharedPreferences.Editor editor = prefs.edit();
+
+		            		double pago = Double.parseDouble(input.getText().toString());
+		            		double deuda_nueva = deudaDouble - pago;
+		            		
+		            		editor.putString("deuda", deuda_nueva + "");
+		            		editor.commit();
+		            		calcularPago();
+		            		
+		            		//agregarPago();
+
+		            		//Dismiss once everything is OK.
+		            		editalert.dismiss();
 		            	}
+		            }
+		        });
+		        
+		        Button c = editalert.getButton(AlertDialog.BUTTON_NEGATIVE);
+		        c.setOnClickListener(new View.OnClickListener() {
+
+		            @Override
+		            public void onClick(View view) {
+		            	//Dismiss once everything is OK.
+		            	editalert.dismiss();
 		            }
 		        });
 		    }
@@ -218,10 +232,9 @@ public class DeudasActivity extends SherlockActivity {
 
 		chmin.setOnCheckedChangeListener(
 				new CheckBox.OnCheckedChangeListener() {
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						if (isChecked) {
-							input.setText(pago_min + "");
+							input.setText(String.format("%.2f", pago_min));
 							input.setEnabled(false);
 						}
 						else {

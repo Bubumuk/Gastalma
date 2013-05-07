@@ -35,7 +35,6 @@ public class GastosSQLiteHelper extends SQLiteOpenHelper {
     private String sqlCreatePagos = "CREATE TABLE Pagos (" +
     		"id INTEGER PRIMARY KEY AUTOINCREMENT," +
     		"cantidad NUMERIC," +
-    		"gasto NUMERIC" +
     		"fecha TEXT," +
     		"dia TEXT," +
     		"mes TEXT," +

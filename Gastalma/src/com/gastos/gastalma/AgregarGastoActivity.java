@@ -25,6 +25,7 @@ import android.text.InputFilter;
 import android.text.format.DateFormat;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class AgregarGastoActivity extends SherlockActivity {
 	
@@ -36,6 +37,7 @@ public class AgregarGastoActivity extends SherlockActivity {
 	private Toast toast;
 	private boolean editar;
 	private int id;
+	private SharedPreferences prefs;
 
 	@SuppressLint("SimpleDateFormat")
 	@Override
@@ -54,6 +56,8 @@ public class AgregarGastoActivity extends SherlockActivity {
 		rr = (RadioButton)findViewById(R.id.radio0);
 		
 		txt2.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(8,2)});
+		
+		prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
 		
 		// Show the done-discard action bar.
 		setupActionBar();
@@ -149,16 +153,33 @@ public class AgregarGastoActivity extends SherlockActivity {
 	
 	private void agregarGasto() {
 		
+		double costo = Double.parseDouble(txt2.getText().toString());
+		boolean isChecked = rr.isChecked();
+		String tipo = isChecked ? "Débito" : "Crédito";
+		
 		dbHelper.insertarGasto(
 				txt1.getText().toString(),
 				dp1.getDate(),
-				Double.parseDouble(txt2.getText().toString()),
+				costo,
 				txt3.getText().toString(),
-				(rr.isChecked() ? "Débito" : "Crédito"),
+				tipo,
 				getTime());
+		
+		if(!isChecked) {
+			agregarDeuda(Double.parseDouble(txt2.getText().toString()));
+		}
 		
 		toast = Toast.makeText(getApplicationContext(), "Elemento agregado", Toast.LENGTH_SHORT);
 		toast.show();
+	}
+	
+	private void agregarDeuda(double costo) {
+		String deuda = prefs.getString("deuda", "0");
+		double deuda_nueva = Double.parseDouble(deuda) + costo;
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("deuda", deuda_nueva + "");
+		editor.commit();
 	}
 	
 	@SuppressLint("SimpleDateFormat")
@@ -189,6 +210,8 @@ public class AgregarGastoActivity extends SherlockActivity {
 				txt2.getText().toString(),
 				txt3.getText().toString(),
 				dp1.getDate(),
+				getTime(),
+				(rr.isChecked() ? "Débito" : "Crédito"),
 				id);
 
 		if(exito) {
