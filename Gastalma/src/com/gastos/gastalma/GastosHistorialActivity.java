@@ -128,7 +128,7 @@ public class GastosHistorialActivity extends SherlockActivity {
 		     } while(c.moveToNext());
 		}
 		
-		adapter = new GastosHistorialAdapter(this, android.R.layout.simple_list_item_2, lista_gastos);
+		adapter = new GastosHistorialAdapter(this, R.layout.list_row, lista_gastos);
 		listView.setAdapter(adapter);
 	}
 	

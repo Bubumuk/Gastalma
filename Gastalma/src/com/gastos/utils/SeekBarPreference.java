@@ -8,6 +8,7 @@ package com.gastos.utils;
 
 import com.gastos.gastalma.R;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -22,7 +23,7 @@ import android.content.res.*;
 public class SeekBarPreference extends DialogPreference implements SeekBar.OnSeekBarChangeListener
 {
 	private static final String androidns="http://schemas.android.com/apk/res/android";
-	private static final String appns="http://schemas.android.com/apk/res/com.gastos.gastalma";
+	//private static final String appns="http://schemas.android.com/apk/res/com.gastos.gastalma";
 
 	private SeekBar mSeekBar;
 	private TextView mSplashText,mValueText;
@@ -31,6 +32,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 	private String mDialogMessage, mSuffix;
 	private int mDefault, mMax, mMin, mValue = 0;
 
+	@SuppressLint("Recycle")
 	public SeekBarPreference(Context context, AttributeSet attrs) { 
 		super(context,attrs); 
 		mContext = context;
@@ -63,13 +65,13 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 		mValueText.setGravity(Gravity.CENTER_HORIZONTAL);
 		mValueText.setTextSize(32);
 		params = new LinearLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, 
+				LayoutParams.MATCH_PARENT, 
 				LayoutParams.WRAP_CONTENT);
 		layout.addView(mValueText, params);
 
 		mSeekBar = new SeekBar(mContext);
 		mSeekBar.setOnSeekBarChangeListener(this);
-		layout.addView(mSeekBar, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		layout.addView(mSeekBar, new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 
 		if (shouldPersist())
 			mValue = getPersistedInt(mDefault);
@@ -103,6 +105,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
 			mValue = (Integer)defaultValue;
 	}
 
+	@SuppressLint("UseValueOf")
 	public void onProgressChanged(SeekBar seek, int value, boolean fromTouch)
 	{
 		String t = String.valueOf(value + mMin);

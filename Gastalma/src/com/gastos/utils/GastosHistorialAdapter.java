@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.gastos.gastalma.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -32,8 +34,9 @@ public class GastosHistorialAdapter extends ArrayAdapter<Gasto> implements Filte
  
     /*private view holder class*/
     private class ViewHolder {
-        TextView txtCant;
+    	TextView txtCant;
         TextView txtNom;
+        TextView txtDate;
     }
 
     @Override
@@ -54,17 +57,18 @@ public class GastosHistorialAdapter extends ArrayAdapter<Gasto> implements Filte
  
         LayoutInflater mInflater = (LayoutInflater)context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(android.R.layout.simple_list_item_2, null);
+            convertView = mInflater.inflate(R.layout.list_row, null);
             holder = new ViewHolder();
-            holder.txtCant = (TextView) convertView.findViewById(android.R.id.text1);
-            holder.txtNom = (TextView) convertView.findViewById(android.R.id.text2);
+            holder.txtCant = (TextView) convertView.findViewById(R.id.row_title);
+            holder.txtNom = (TextView) convertView.findViewById(R.id.row_subtitle);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.row_date);
             convertView.setTag(holder);
         } else
             holder = (ViewHolder) convertView.getTag();
 
         holder.txtCant.setText(nf.format(Double.parseDouble(rowItem.getCosto())));
         holder.txtNom.setText(rowItem.getNombre());
-
+        holder.txtDate.setText(rowItem.getFecha());
 
         return convertView;
     }
