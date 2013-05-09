@@ -196,7 +196,7 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	public String getTime() {
     	Calendar cal = Calendar.getInstance();
     	cal.getTime();
-    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss a");
+    	SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
     	return sdf.format(cal.getTime());
     }
 

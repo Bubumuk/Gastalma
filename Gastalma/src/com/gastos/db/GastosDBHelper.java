@@ -203,7 +203,7 @@ public class GastosDBHelper {
 		return c;
 	}
 	
-	public boolean insertarPago(Double cantidad, String fecha) {
+	public boolean insertarPago(double cantidad, String fecha, String hora) {
 		
 		//Creamos el registro a insertar como objeto ContentValues
 		ContentValues pago = new ContentValues();
@@ -212,6 +212,7 @@ public class GastosDBHelper {
 		pago.put("dia", separarFecha(fecha, 1));
 		pago.put("mes", separarFecha(fecha, 2));
 		pago.put("año", separarFecha(fecha, 3));
+		pago.put("hora", hora);
 		 
 		//Insertamos el registro en la base de datos
 		int exito = (int)db.insert("Pagos", null, pago);
@@ -223,7 +224,7 @@ public class GastosDBHelper {
 	
 	public Cursor fetchPagos() {
 		
-		Cursor c = db.query("Pagos", new String[] { "cantidad", "fecha" }, null, null, null, null, null);
+		Cursor c = db.query("Pagos", new String[] { "cantidad", "fecha", "hora" }, null, null, null, null, null);
 		return c;
 	}
 	

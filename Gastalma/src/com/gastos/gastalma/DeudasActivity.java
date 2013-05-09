@@ -2,6 +2,9 @@ package com.gastos.gastalma;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
@@ -11,9 +14,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.gastos.db.GastosDBHelper;
-import com.gastos.utils.CroutonAlert;
-
-import de.neofonie.mobile.app.android.widget.crouton.Crouton;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,7 +24,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -47,6 +49,7 @@ public class DeudasActivity extends SherlockActivity {
 	private DateTime dt, dt_pago;
 	private double pago_min;
 	private AlertDialog editalert;
+	private Toast toast;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -168,15 +171,31 @@ public class DeudasActivity extends SherlockActivity {
 				return true;
 			case 1:
 				pagarDeuda();
-				/*
-				Crouton.makeText(
-						this, 
-						CroutonAlert.alert_string, 
-						CroutonAlert.alertStyle())
-						.show();*/
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public String getTime() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.getTime();
+    	SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+    	return sdf.format(cal.getTime());
+    }
+	
+	@SuppressLint("SimpleDateFormat")
+	public String getDate() {
+		Date cDate = new Date();
+		String fDate = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+		return fDate;
+	}
+	
+	private void agregarPago(double cantidad) {
+		dbHelper.insertarPago(cantidad, getDate(), getTime());
+		
+		toast = Toast.makeText(getApplicationContext(), "Elemento agregado", Toast.LENGTH_SHORT);
+		toast.show();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
@@ -210,7 +229,7 @@ public class DeudasActivity extends SherlockActivity {
 		            		editor.commit();
 		            		calcularPago();
 		            		
-		            		//agregarPago();
+		            		agregarPago(pago);
 
 		            		//Dismiss once everything is OK.
 		            		editalert.dismiss();

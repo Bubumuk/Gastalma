@@ -75,6 +75,7 @@ public class MenuActivity extends SherlockActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		menu.add(Menu.NONE, 2, Menu.NONE, "Gastos");
 		menu.add(Menu.NONE, 3, Menu.NONE, "Ingresos");
+		menu.add(Menu.NONE, 4, Menu.NONE, "Pagos");
 	}
 
 	@Override
@@ -87,6 +88,10 @@ public class MenuActivity extends SherlockActivity {
 		case 3:
 			Intent myIntentI = new Intent(this, ReportesIngresosActivity.class);
 			startActivity(myIntentI);
+			break;
+		case 4:
+			Intent myIntentP = new Intent(this, PagosHistorialActivity.class);
+			startActivity(myIntentP);
 			break;
 		}
 		return true;
