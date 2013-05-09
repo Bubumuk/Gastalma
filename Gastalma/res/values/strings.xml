@@ -68,5 +68,8 @@
     <string name="buscar_">Buscar..</string>
     <string name="no_hay_datos">No hay datos</string>
     <string name="title_activity_pagos_historial">Historial de Pagos</string>
+    <string name="title_activity_about">Acerca de</string>
+    <string name="heart">♥</string>
+    <string name="gastalma">Gastalma</string>
 
 </resources>

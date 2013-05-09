@@ -41,7 +41,7 @@ public class MenuActivity extends SherlockActivity {
 
 		SubMenu subMenu = menu.addSubMenu("Configuración");
         subMenu.add(Menu.NONE, 1, Menu.NONE, "Configuración");
-        subMenu.add("Acerca de");
+        subMenu.add(Menu.NONE, 2, Menu.NONE, "Acerca de");
 
         MenuItem subMenuItem = subMenu.getItem();
         subMenuItem.setIcon(com.actionbarsherlock.R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
@@ -67,29 +67,32 @@ public class MenuActivity extends SherlockActivity {
 		case 1:
 			ViewConfiguracion();
 			break;
+		case 2:
+			ViewAbout();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		menu.add(Menu.NONE, 2, Menu.NONE, "Gastos");
-		menu.add(Menu.NONE, 3, Menu.NONE, "Ingresos");
-		menu.add(Menu.NONE, 4, Menu.NONE, "Pagos");
+		menu.add(Menu.NONE, 3, Menu.NONE, "Gastos");
+		menu.add(Menu.NONE, 4, Menu.NONE, "Ingresos");
+		menu.add(Menu.NONE, 5, Menu.NONE, "Pagos");
 	}
 
 	@Override
 	public boolean onContextItemSelected(android.view.MenuItem item) {
 		switch (item.getItemId()) {
-		case 2:
+		case 3:
 			Intent myIntentG = new Intent(this, ReportesGastosActivity.class);
 			startActivity(myIntentG);
 			break;
-		case 3:
+		case 4:
 			Intent myIntentI = new Intent(this, ReportesIngresosActivity.class);
 			startActivity(myIntentI);
 			break;
-		case 4:
+		case 5:
 			Intent myIntentP = new Intent(this, PagosHistorialActivity.class);
 			startActivity(myIntentP);
 			break;
@@ -118,6 +121,11 @@ public class MenuActivity extends SherlockActivity {
 
 	public void ViewConfiguracion() {
 		Intent myIntent = new Intent(this, PrefsActivity.class);
+		startActivityForResult(myIntent, 0);
+	}
+	
+	public void ViewAbout() {
+		Intent myIntent = new Intent(this, AboutActivity.class);
 		startActivityForResult(myIntent, 0);
 	}
 

@@ -106,6 +106,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
         </activity>
+        <activity
+            android:name="com.gastos.gastalma.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.MenuActivity" />
+        </activity>
     </application>
 
 </manifest>
