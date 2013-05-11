@@ -19,6 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +28,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.support.v4.app.NavUtils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -62,6 +67,26 @@ public class GastosActivity extends SherlockActivity {
 		setupActionBar();
         
         registerForContextMenu(listView);
+        
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(GastosActivity.this);
+				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
+				
+				builder.setTitle(gasto.getNombre())
+					.setMessage(gasto.getDescripcion())
+					.setPositiveButton("Aceptar", new OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.cancel();
+				        }
+				    });
+				
+				AlertDialog dialog = builder.create();
+				dialog.show();
+			}
+		});
 	}
 	
 	private void populateListaGastos() {

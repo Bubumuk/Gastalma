@@ -227,9 +227,4 @@ public class GastosDBHelper {
 		Cursor c = db.query("Pagos", new String[] { "cantidad", "fecha", "hora" }, null, null, null, null, null);
 		return c;
 	}
-	
-	public String fetchDeuda() {
-		Cursor c = db.rawQuery("SELECT SUM(Costo) FROM Gastos WHERE tipo='Crédito'", null);
-		return c.moveToNext() ? (c.getString(0) != null) ? c.getString(0) : "0" : "0";
-	}
 }

@@ -17,6 +17,9 @@ import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -27,7 +30,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
@@ -90,6 +95,26 @@ public final class ReporteGastosMesFragment extends SherlockFragment {
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.addView(text);
         layout.addView(listView);
+        
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
+				
+				builder.setTitle(gasto.getNombre())
+					.setMessage(gasto.getDescripcion())
+					.setPositiveButton("Aceptar", new OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.cancel();
+				        }
+				    });
+				
+				AlertDialog dialog = builder.create();
+				dialog.show();
+			}
+		});
         
         populateListaGastosMes();
 

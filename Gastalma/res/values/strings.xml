@@ -71,5 +71,8 @@
     <string name="title_activity_about">Acerca de</string>
     <string name="heart">♥</string>
     <string name="gastalma">Gastalma</string>
+    <string name="title_activity_lock_pattern">LockPatternActivity</string>
+    <string name="summary_intent_preference">Intent</string>
+    <string name="title_intent_preference">TODO</string>
 
 </resources>

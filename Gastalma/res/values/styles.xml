@@ -19,4 +19,13 @@
     
     <color name="alert">#FA4042</color>
 
+    <style name="MyTheme.ActionBarStyle" parent="Widget.Sherlock.ActionBar">
+        <item name="background">#6dc066</item>
+        <item name="android:background">#6dc066</item>
+    </style>
+
+    <style name="Theme.SherlockCustom" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/MyTheme.ActionBarStyle</item>
+    </style>
+
 </resources>

@@ -11,10 +11,11 @@
         android:defaultValue="24" />
 
     <com.gastos.utils.SeekBarPreference
-		android:key="porciento_pago"
-        android:title="Porcentaje de Pago"
         android:defaultValue="15"
-        android:summary="15"
+        android:key="porciento_pago"
         android:max="40"
+        android:summary="15"
+        android:title="Porcentaje de Pago"
         app:min="0" />
+
 </PreferenceScreen>
