@@ -1,28 +1,16 @@
 package com.gastos.utils.fragments.gastos;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.gastos.gastalma.R;
-import com.gastos.utils.fragments.ingresos.ReporteIngresosFragment;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
 
 public final class ReporteGraficasGastosFragment extends SherlockListFragment {
 	private EditText text;
@@ -52,6 +40,7 @@ public final class ReporteGraficasGastosFragment extends SherlockListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.list_main_layout, container, false);
+
 		return v;
 	}
 

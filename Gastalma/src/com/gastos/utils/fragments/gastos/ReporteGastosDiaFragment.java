@@ -12,7 +12,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.gastos.db.GastosDBHelper;
-import com.gastos.gastalma.GastosActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
@@ -88,6 +87,10 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
             }
         });
         
+        View line = new View(getActivity());
+        line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
+        line.setBackgroundColor(0xFF3C3C3C);
+        
         listView = new ListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
@@ -95,6 +98,7 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.addView(text);
+        //layout.addView(line);
         layout.addView(listView);
         
         listView.setOnItemClickListener(new OnItemClickListener() {
