@@ -7,10 +7,11 @@
 	** Unlike the native headers these are also used for building the single pane version.
 	*/
     -->
-    
+    <!-- 
     <header
         unified:fragment="com.example.gastalma$GeneralPreferenceFragment"
         unified:title="@string/pref_header_general"
         unified:preferenceRes="@xml/pref_general" />
+        -->
 
 </preference-headers>

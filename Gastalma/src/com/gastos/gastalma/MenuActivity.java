@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.View;
@@ -53,17 +52,6 @@ public class MenuActivity extends SherlockActivity {
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-
-			return true;
 		case 1:
 			ViewConfiguracion();
 			break;
@@ -128,5 +116,10 @@ public class MenuActivity extends SherlockActivity {
 		Intent myIntent = new Intent(this, AboutActivity.class);
 		startActivityForResult(myIntent, 0);
 	}
-
+	
+	@Override
+	public void onBackPressed() {
+		moveTaskToBack(true);
+		finish();
+	}
 }

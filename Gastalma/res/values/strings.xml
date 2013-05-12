@@ -74,5 +74,6 @@
     <string name="title_activity_lock_pattern">LockPatternActivity</string>
     <string name="summary_intent_preference">Intent</string>
     <string name="title_intent_preference">TODO</string>
+    <string name="title_activity_app">AppActivity</string>
 
 </resources>
