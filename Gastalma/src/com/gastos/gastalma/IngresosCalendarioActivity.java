@@ -1,37 +1,66 @@
 package com.gastos.gastalma;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
-import android.annotation.TargetApi;
-import android.os.Build;
+import java.util.Calendar;
+import java.util.Date;
 
-public class IngresosCalendarioActivity extends Activity {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.squareup.timessquare.CalendarPickerView;
+import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
+
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+
+public class IngresosCalendarioActivity extends SherlockActivity {
+
+	private CalendarPickerView calendar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_ingresos_calendario);
+		setContentView(R.layout.activity_gastos_calendario);
+		
 		// Show the Up button in the action bar.
 		setupActionBar();
+		
+		final Calendar lastYear = Calendar.getInstance();
+		lastYear.add(Calendar.YEAR, -1);
+		final Calendar maxDate = Calendar.getInstance();
+		maxDate.add(Calendar.DAY_OF_MONTH, 1);
+		
+		long fecha = getIntent().getLongExtra("dia_seleccionado", -1);
+		Date cDate = new Date(fecha);
+
+		calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
+		calendar.init(cDate, lastYear.getTime(), maxDate.getTime());
+		
+		calendar.setOnDateSelectedListener(new OnDateSelectedListener() {
+			
+			@SuppressLint("SimpleDateFormat")
+			@Override
+			public void onDateSelected(Date date) {
+				//String fecha = new SimpleDateFormat("dd/MM/yyyy").format(date);
+				//Toast.makeText(GastosCalendarioActivity.this, fecha, Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent();
+				intent.putExtra("fecha", date.getTime());
+				setResult(RESULT_OK, intent);
+				finish();
+			}
+		});
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			getActionBar().setDisplayHomeAsUpEnabled(true);
-		}
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.ingresos_calendario, menu);
+		menu.add(Menu.NONE, 1, Menu.NONE, "Hoy")
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
 		return true;
 	}
 
@@ -48,6 +77,9 @@ public class IngresosCalendarioActivity extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case 1:
+			calendar.selectDate(new Date());
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

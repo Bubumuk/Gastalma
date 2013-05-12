@@ -25,17 +25,22 @@ import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.SubMenu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
 
 public class IngresosActivity extends SherlockActivity {
 
+	private final int INGRESO_AGREGADO = 1;
+	private final int FECHA_SELECCIONADA = 2;
+	
 	private String fDate, lDate;
 	private ListView listView;
 	private IngresosAdapter adapter;
 	private GastosDBHelper dbHelper;
+	private TextView textDia;
+	private Locale loc_mx;
+	private Date cDate;
 	
 	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 	@Override
@@ -43,12 +48,12 @@ public class IngresosActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ingresos);
 		
-		Locale loc = new Locale("es","MX");
-		Date cDate = new Date();
-		fDate = new SimpleDateFormat("MMMM", loc).format(cDate);
-		lDate = new SimpleDateFormat("dd/MM/yyyy", loc).format(cDate);
-		TextView t = (TextView)findViewById(R.id.textView1);
-		t.setText(fDate.toUpperCase());
+		loc_mx = new Locale("es","MX");
+		cDate = new Date();
+		fDate = new SimpleDateFormat("MMMM", loc_mx).format(cDate);
+		lDate = new SimpleDateFormat("dd/MM/yyyy", loc_mx).format(cDate);
+		textDia = (TextView)findViewById(R.id.textView1);
+		textDia.setText(fDate.toUpperCase());
 		
 		listView = (ListView)findViewById(R.id.listView1);
         
@@ -111,10 +116,6 @@ public class IngresosActivity extends SherlockActivity {
         listView.setAdapter(adapter);
 	}
 
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -123,13 +124,20 @@ public class IngresosActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
+		
+		menu.add(Menu.NONE, 1, Menu.NONE, "Agregar")
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		SubMenu subMenu = menu.addSubMenu("Agregar");
-        subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
-        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");
+		//SubMenu subMenu = menu.addSubMenu("Agregar");
+        /*subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
+        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");*/
+        
+        menu.add(Menu.NONE, 2, Menu.NONE, "")
+        	.setIcon(android.R.drawable.ic_menu_today)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
-        subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
+        //subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         
         return true;
 	}
@@ -152,12 +160,12 @@ public class IngresosActivity extends SherlockActivity {
 				ViewAgregarIngresos();
 	            break;
 			case 2:
-				ViewIngresosHistorial();
+				ViewCalendarioIngresos();
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
@@ -184,7 +192,7 @@ public class IngresosActivity extends SherlockActivity {
 	
 	public void ViewAgregarIngresos() {
 		Intent myIntent = new Intent(this, AgregarIngresoActivity.class);
-		startActivityForResult(myIntent, 0);
+		startActivityForResult(myIntent, INGRESO_AGREGADO);
 	}
 	
 	public void ViewIngresosHistorial() {
@@ -192,12 +200,32 @@ public class IngresosActivity extends SherlockActivity {
 		startActivityForResult(myIntent, 0);
 	}
 	
+	private void ViewCalendarioIngresos() {
+		Intent myIntent = new Intent(this, GastosCalendarioActivity.class);
+		myIntent.putExtra("dia_seleccionado", cDate.getTime());
+		startActivityForResult(myIntent, FECHA_SELECCIONADA);
+		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+	}
+	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 	    super.onActivityResult(requestCode, resultCode, intent);
-	    //check result
 	    if(resultCode == RESULT_OK) {
-	    	populateListaIngresos();
+	    	switch(requestCode) {
+	    	case INGRESO_AGREGADO:
+	    		populateListaIngresos();
+	    		break;
+	    	case FECHA_SELECCIONADA:	    		
+	    		long fecha_long = intent.getLongExtra("fecha", -1);
+	    		cDate = new Date(fecha_long);
+				String fecha = new SimpleDateFormat("MMMM", loc_mx).format(cDate);
+	    		fDate = fecha;
+	    		lDate = new SimpleDateFormat("dd/MM/yyyy", loc_mx).format(cDate);
+	    		textDia.setText(fDate.toUpperCase());
+	    		populateListaIngresos();
+	    		break;
+	    	}
 	    }
 	}
 
