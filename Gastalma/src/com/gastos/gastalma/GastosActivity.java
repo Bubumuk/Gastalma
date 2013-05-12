@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 
 import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.SubMenu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
@@ -37,10 +36,16 @@ import android.os.Build;
 
 public class GastosActivity extends SherlockActivity {
 	
+	private final int GASTO_AGREGADO = 1;
+	private final int FECHA_SELECCIONADA = 2;
+	
 	private String fDate, lDate;
 	private ListView listView;
 	private GastosAdapter adapter;
 	private GastosDBHelper dbHelper;
+	private TextView textDia;
+	private Locale loc_mx;
+	private Date cDate;
 
 	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 	@Override
@@ -48,13 +53,13 @@ public class GastosActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gastos);
 		
-		Locale loc = new Locale("es","MX");
+		loc_mx = new Locale("es","MX");
 		
-		Date cDate = new Date();
+		cDate = new Date();
 		fDate = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
-		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc).format(cDate);
-		TextView t = (TextView)findViewById(R.id.textView1);
-		t.setText(lDate);
+		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
+		textDia = (TextView)findViewById(R.id.textView1);
+		textDia.setText(lDate);
 		
 		listView = (ListView)findViewById(R.id.listView1);
         
@@ -108,13 +113,20 @@ public class GastosActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
+		
+		menu.add(Menu.NONE, 1, Menu.NONE, "Agregar")
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		SubMenu subMenu = menu.addSubMenu("Agregar");
-        subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
-        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");
+		//SubMenu subMenu = menu.addSubMenu("Agregar");
+        /*subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
+        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");*/
+        
+        menu.add(Menu.NONE, 2, Menu.NONE, "")
+        	.setIcon(android.R.drawable.ic_menu_today)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
-        subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
+        //subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         
         return true;
 	}
@@ -137,7 +149,7 @@ public class GastosActivity extends SherlockActivity {
 				ViewAgregarGastos();
 	            break;
 			case 2:
-				ViewGastosHistorial();
+				ViewCalendarioGastos();
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -165,10 +177,6 @@ public class GastosActivity extends SherlockActivity {
 	    }
 	}
 	
-	/**
-	 * Set up the {@link android.app.ActionBar}, if the API is available.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -198,12 +206,19 @@ public class GastosActivity extends SherlockActivity {
 	
 	public void ViewAgregarGastos() {
 		Intent myIntent = new Intent(this, AgregarGastoActivity.class);
-		startActivityForResult(myIntent, 0);
+		startActivityForResult(myIntent, GASTO_AGREGADO);
 	}
 	
 	public void ViewGastosHistorial() {
 		Intent myIntent = new Intent(this, GastosHistorialActivity.class);
 		startActivityForResult(myIntent, 0);
+	}
+	
+	public void ViewCalendarioGastos() {
+		Intent myIntent = new Intent(this, GastosCalendarioActivity.class);
+		myIntent.putExtra("dia_seleccionado", cDate.getTime());
+		startActivityForResult(myIntent, FECHA_SELECCIONADA);
+		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 	}
 	
 	public Bundle bundleGasto(Gasto gasto){
@@ -218,12 +233,26 @@ public class GastosActivity extends SherlockActivity {
 	     return bundle;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 	    super.onActivityResult(requestCode, resultCode, intent);
 	    
 	    if(resultCode == RESULT_OK) {
-	    	populateListaGastos();
+	    	switch(requestCode) {
+	    	case GASTO_AGREGADO:
+	    		populateListaGastos();
+	    		break;
+	    	case FECHA_SELECCIONADA:
+	    		long fecha_long = intent.getLongExtra("fecha", -1);
+	    		cDate = new Date(fecha_long);
+				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+	    		fDate = fecha;
+	    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
+	    		textDia.setText(lDate);
+	    		populateListaGastos();
+	    		break;
+	    	}
 	    }
 	}
 

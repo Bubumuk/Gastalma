@@ -38,7 +38,7 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 		setOnClickListeners();
 		setSeguridadSummary();
 		
-		lock = new Intent(PrefsActivity.this, Prefs2Activity.class);
+		lock = new Intent(PrefsActivity.this, PrefsLockActivity.class);
 		seguridad.setIntent(lock);
 	}
 	

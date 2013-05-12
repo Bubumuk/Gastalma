@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-public class Prefs2Activity extends SherlockPreferenceActivity {
+public class PrefsLockActivity extends SherlockPreferenceActivity {
 
 	SharedPreferences prefs;
 	Preference lock_pattern;
@@ -44,7 +44,7 @@ public class Prefs2Activity extends SherlockPreferenceActivity {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				Intent i = new Intent(LockPatternActivity._ActionCreatePattern,
-	                    null, Prefs2Activity.this, LockPatternActivity.class);
+	                    null, PrefsLockActivity.this, LockPatternActivity.class);
 	            i.putExtra(LockPatternActivity._Theme, R.style.Alp_Theme_Dialog_Dark);
 	            i.putExtra(LockPatternActivity._AutoSave, true);
 	            i.putExtra(LockPatternActivity._MinWiredDots, 4);

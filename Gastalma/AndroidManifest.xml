@@ -125,12 +125,28 @@
             android:theme="@style/Alp.Theme.Dialog.Dark" >
         </activity>
         <activity
-            android:name="com.gastos.gastalma.Prefs2Activity"
+            android:name="com.gastos.gastalma.PrefsLockActivity"
             android:label="@string/title_activity_prefs"
-			android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.PrefsActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.GastosCalendarioActivity"
+            android:label="@string/title_activity_gastos_calendario"
+            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.GastosActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.IngresosCalendarioActivity"
+            android:label="@string/title_activity_ingresos_calendario"
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gastos.gastalma.IngresosActivity" />
         </activity>
     </application>
 
