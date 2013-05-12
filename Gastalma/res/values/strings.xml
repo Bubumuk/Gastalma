@@ -75,5 +75,6 @@
     <string name="summary_intent_preference">Intent</string>
     <string name="title_intent_preference">TODO</string>
     <string name="title_activity_app">AppActivity</string>
+    <string name="title_activity_prefs2">Prefs2Activity</string>
 
 </resources>

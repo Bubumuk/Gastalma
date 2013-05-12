@@ -1,7 +1,5 @@
 package com.gastos.gastalma;
 
-import group.pals.android.lib.ui.lockpattern.LockPatternActivity;
-
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.gastos.utils.SeekBarPreference;
 
@@ -13,8 +11,6 @@ import android.os.Build;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceScreen;
 import android.preference.TwoStatePreference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.support.v4.app.NavUtils;
@@ -24,9 +20,8 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 	SharedPreferences prefs;
 	ListPreference dia_pago;
 	SeekBarPreference porciento_pago;
-	Preference lock_pattern;
-	PreferenceScreen seguridad;
-	Preference lock_ninguno;
+	Preference seguridad;
+	Intent lock;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -40,11 +35,16 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 		
 		setPrefs();
 		setChangeListeners();
-		setPreferenceOnClickListener();
-		
+		setOnClickListeners();
 		setSeguridadSummary();
+		
+		lock = new Intent(PrefsActivity.this, Prefs2Activity.class);
+		seguridad.setIntent(lock);
 	}
 	
+	private void setOnClickListeners() {	
+	}
+
 	private void setSeguridadSummary() {
 		String savedPattern = prefs.getString("_Pattern", "");
 		seguridad.setSummary(savedPattern.equals("") ? "Ninguno" : "Patrón");
@@ -54,43 +54,12 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 	private void setPrefs() {
 		dia_pago = (ListPreference)findPreference("dia_pago");
 		porciento_pago = (SeekBarPreference)findPreference("porciento_pago");
-		lock_pattern = (Preference)findPreference("lock_pattern");
-		seguridad = (PreferenceScreen)findPreference("seguridad");
-		lock_ninguno = (Preference)findPreference("lock_ninguno");
+		seguridad = (Preference)findPreference("seguridad");
 	}
 	
 	private void setChangeListeners() {
 		dia_pago.setOnPreferenceChangeListener(this);
 		porciento_pago.setOnPreferenceChangeListener(this);
-		lock_pattern.setOnPreferenceChangeListener(this);
-	}
-	
-	private void setPreferenceOnClickListener() {
-		lock_pattern.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				Intent i = new Intent(LockPatternActivity._ActionCreatePattern,
-	                    null, PrefsActivity.this, LockPatternActivity.class);
-	            i.putExtra(LockPatternActivity._Theme, R.style.Alp_Theme_Dialog_Dark);
-	            i.putExtra(LockPatternActivity._AutoSave, true);
-	            i.putExtra(LockPatternActivity._MinWiredDots, 4);
-	            startActivityForResult(i, 1);
-				return true;
-			}
-		});
-		
-		lock_ninguno.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				seguridad.setSummary("Ninguno");
-				prefs.edit().putString("_Pattern", "").commit();
-				getListView().invalidateViews();
-				seguridad.getDialog().dismiss();
-				return true;
-			}
-		});
 	}
 	
 	@Override
@@ -114,6 +83,24 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 		}
 		return true;
 	}
+	
+	@Override
+    public void startActivity(Intent intent) {
+        if (intent.equals(lock)) {
+            super.startActivityForResult(intent, 1);
+        } else {
+            super.startActivity(intent);
+        }
+    }
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == RESULT_OK) {
+            // should be getting called now
+        	setSeguridadSummary();
+        }
+    }
 
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -137,23 +124,5 @@ public class PrefsActivity extends SherlockPreferenceActivity implements OnPrefe
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    switch (requestCode) {
-	    case 1:
-	        if (resultCode == RESULT_OK) {
-	            String pattern = data.getStringExtra(LockPatternActivity._Pattern);
-	            seguridad.setSummary("Patrón");
-	            prefs.edit().putString("_Pattern", pattern).commit();
-	            getListView().invalidateViews();
-	            seguridad.getDialog().dismiss();
-	        }
-	        if(resultCode == RESULT_CANCELED) {
-	        	seguridad.getDialog().dismiss();
-	        }
-	        break;
-	    }
 	}
 }

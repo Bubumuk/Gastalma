@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.gastos.gastalma" >
+    
+    <PreferenceCategory
+        android:title="Definir bloqueo de la aplicación" >
+        
+        <Preference
+            android:key="lock_ninguno"
+            android:summary="Desactivar seguridad de acceso a la aplicación"
+            android:title="Ninguno" />
+        
+        <Preference
+            android:key="lock_pattern"
+            android:summary="Dibujar patrón para acceder a la aplicación"
+            android:title="Patrón" />
+        
+    </PreferenceCategory>
+
+</PreferenceScreen>
