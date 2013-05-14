@@ -124,7 +124,7 @@ public class GastosHistorialActivity extends SherlockActivity {
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
 		     do {
-		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getInt(5)));
+		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 		     } while(c.moveToNext());
 		}
 		

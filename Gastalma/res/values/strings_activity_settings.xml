@@ -1,7 +1,12 @@
 <resources>
 
     <!-- Strings related to Settings -->
-
+	<string-array name="locations">
+        <item >Día</item>
+        <item >Mes</item>
+        <item >Año</item>
+        <item >Semana</item>
+    </string-array>
 
     <!-- General settings -->
     <string name="pref_header_general">General</string>

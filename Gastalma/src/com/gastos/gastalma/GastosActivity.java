@@ -80,7 +80,7 @@ public class GastosActivity extends SherlockActivity {
 				AlertDialog.Builder builder = new AlertDialog.Builder(GastosActivity.this);
 				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
 				
-				builder.setTitle(gasto.getNombre())
+				builder.setTitle("Detalle: "+gasto.getNombre())
 					.setMessage(gasto.getDescripcion())
 					.setPositiveButton("Aceptar", new OnClickListener() {
 				        public void onClick(DialogInterface dialog, int which) {
@@ -95,35 +95,42 @@ public class GastosActivity extends SherlockActivity {
 	}
 	
 	private void populateListaGastos() {
+		dbHelper.abrirLecturaBD(this);
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		Cursor c = dbHelper.fetchGastosDia(fDate);
 		//Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
 		     do {
-		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), fDate, c.getInt(4)));
+		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 		     } while(c.moveToNext());
 		}
         
 		adapter = new GastosAdapter(this, android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
+		dbHelper.close();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
+
+		menu.add(Menu.NONE, 3, Menu.NONE, "")
+    		.setIcon(R.drawable.ic_action_go_to_today)
+    		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		menu.add(Menu.NONE, 2, Menu.NONE, "Historial")
+			.setIcon(R.drawable.ic_action_time)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		
 		menu.add(Menu.NONE, 1, Menu.NONE, "Agregar")
+			.setIcon(R.drawable.ic_action_new)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		//SubMenu subMenu = menu.addSubMenu("Agregar");
         /*subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
         subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");*/
-        
-        menu.add(Menu.NONE, 2, Menu.NONE, "")
-        	.setIcon(android.R.drawable.ic_menu_today)
-        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         //com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
         //subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -149,6 +156,9 @@ public class GastosActivity extends SherlockActivity {
 				ViewAgregarGastos();
 	            break;
 			case 2:
+				ViewReporteGastos();
+				break;
+			case 3:
 				ViewCalendarioGastos();
 	            break;
 		}
@@ -183,6 +193,7 @@ public class GastosActivity extends SherlockActivity {
 	
 	@SuppressLint("ResourceAsColor")
 	private void editarGasto(int info) {
+		dbHelper.abrirEscrituraBD(this);
 		Intent myIntent = new Intent(this, AgregarGastoActivity.class);
 		myIntent.putExtra("Gasto", bundleGasto((Gasto)listView.getItemAtPosition(info)));
 		myIntent.putExtra("editar", "editar");
@@ -190,6 +201,7 @@ public class GastosActivity extends SherlockActivity {
 	}
 	
 	private void eliminarGasto(int position) {
+		dbHelper.abrirEscrituraBD(this);
 		Toast toast;
 		Gasto item = (Gasto)listView.getItemAtPosition(position);
 		dbHelper.abrirLecturaBD(this);
@@ -212,6 +224,11 @@ public class GastosActivity extends SherlockActivity {
 	public void ViewGastosHistorial() {
 		Intent myIntent = new Intent(this, GastosHistorialActivity.class);
 		startActivityForResult(myIntent, 0);
+	}
+	
+	public void ViewReporteGastos() {
+		Intent myIntentG = new Intent(this, ReportesGastosActivity.class);
+		startActivityForResult(myIntentG, 0);
 	}
 	
 	public void ViewCalendarioGastos() {

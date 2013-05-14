@@ -47,7 +47,7 @@ public class ReporteGastosFragmentAdapter extends FragmentPagerAdapter {
 			case 2: return "Semana";
 			case 3: return "Año";
 			case 4: return "Personalizado";
-			//case 5: return "Estadísticas";
+			case 5: return "Estadísticas";
 			default: return "";
 		}
 	}

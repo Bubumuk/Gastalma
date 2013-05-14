@@ -152,7 +152,7 @@ public class AgregarGastoActivity extends SherlockActivity {
 	}
 	
 	private void agregarGasto() {
-		
+		dbHelper.abrirEscrituraBD(this);
 		double costo = Double.parseDouble(txt2.getText().toString());
 		boolean isChecked = rr.isChecked();
 		String tipo = isChecked ? "Débito" : "Crédito";
@@ -205,14 +205,23 @@ public class AgregarGastoActivity extends SherlockActivity {
 	}
 	
 	private void actualizarGasto() {
+		dbHelper.abrirEscrituraBD(this);
+		double costo = Double.parseDouble(txt2.getText().toString());
+		boolean isChecked = rr.isChecked();
+		String tipo = isChecked ? "Débito" : "Crédito";
+		
 		boolean exito = dbHelper.actualizarGasto(
 				txt1.getText().toString(),
-				txt2.getText().toString(),
-				txt3.getText().toString(),
 				dp1.getDate(),
+				costo,
+				txt3.getText().toString(),
+				tipo,
 				getTime(),
-				(rr.isChecked() ? "Débito" : "Crédito"),
 				id);
+		
+		if(!isChecked) {
+			agregarDeuda(Double.parseDouble(txt2.getText().toString()));
+		}
 
 		if(exito) {
 			toast = Toast.makeText(getApplicationContext(), "Elemento actualizado", Toast.LENGTH_SHORT);

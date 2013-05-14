@@ -70,7 +70,7 @@ public class IngresosActivity extends SherlockActivity {
 	
 	private void editarIngreso(int info) {
 		Intent myIntent = new Intent(this, AgregarIngresoActivity.class);
-		myIntent.putExtra("com.gastos.utils.Ingreso", bundleIngreso((Ingreso)listView.getItemAtPosition(info)));
+		myIntent.putExtra("Ingreso", bundleIngreso((Ingreso)listView.getItemAtPosition(info)));
 		myIntent.putExtra("editar", "editar");
 		startActivityForResult(myIntent, 1);
 	}
@@ -90,12 +90,12 @@ public class IngresosActivity extends SherlockActivity {
 		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
 		dbHelper.abrirLecturaBD(this);
 		if(dbHelper.eliminarIngreso(item.getId())) {
-			toast = Toast.makeText(getApplicationContext(), "Elemento eliminado", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(this, "Elemento eliminado", Toast.LENGTH_SHORT);
 			toast.show();
 			adapter.remove(item);
 			adapter.notifyDataSetChanged();
 		} else {
-			toast = Toast.makeText(getApplicationContext(), "ERROR al eliminar elemento" + item.getCantidad(), Toast.LENGTH_SHORT);
+			toast = Toast.makeText(this, "ERROR al eliminar elemento" + item.getCantidad(), Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
@@ -108,7 +108,7 @@ public class IngresosActivity extends SherlockActivity {
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
 		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getInt(3)));
+		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
 		     } while(c.moveToNext());
 		}
 		
@@ -124,24 +124,29 @@ public class IngresosActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		//Used to put dark icons on light action bar
-		
+
+		menu.add(Menu.NONE, 3, Menu.NONE, "")
+			.setIcon(R.drawable.ic_action_go_to_today)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		menu.add(Menu.NONE, 2, Menu.NONE, "Historial")
+			.setIcon(R.drawable.ic_action_time)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
 		menu.add(Menu.NONE, 1, Menu.NONE, "Agregar")
+			.setIcon(R.drawable.ic_action_new)
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		//SubMenu subMenu = menu.addSubMenu("Agregar");
-        /*subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
-        subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");*/
-        
-        menu.add(Menu.NONE, 2, Menu.NONE, "")
-        	.setIcon(android.R.drawable.ic_menu_today)
-        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		/*subMenu.add(Menu.NONE, 1, Menu.NONE, "Nuevo");
+    	subMenu.add(Menu.NONE, 2, Menu.NONE, "Desde historial");*/
 
-        //com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
-        //subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        
-        return true;
+		//com.actionbarsherlock.view.MenuItem subMenuItem = subMenu.getItem();
+		//subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		return true;
 	}
-    	
+
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
@@ -160,6 +165,9 @@ public class IngresosActivity extends SherlockActivity {
 				ViewAgregarIngresos();
 	            break;
 			case 2:
+				ViewReporteIngresos();
+				break;
+			case 3:
 				ViewCalendarioIngresos();
 	            break;
 		}
@@ -200,6 +208,11 @@ public class IngresosActivity extends SherlockActivity {
 		startActivityForResult(myIntent, 0);
 	}
 	
+	public void ViewReporteIngresos() {
+		Intent myIntentI = new Intent(this, ReportesIngresosActivity.class);
+		startActivityForResult(myIntentI, 0);
+	}
+	
 	private void ViewCalendarioIngresos() {
 		Intent myIntent = new Intent(this, GastosCalendarioActivity.class);
 		myIntent.putExtra("dia_seleccionado", cDate.getTime());
@@ -207,7 +220,7 @@ public class IngresosActivity extends SherlockActivity {
 		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 	}
 	
-	@SuppressLint("SimpleDateFormat")
+	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 	    super.onActivityResult(requestCode, resultCode, intent);

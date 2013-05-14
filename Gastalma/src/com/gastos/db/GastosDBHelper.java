@@ -11,8 +11,8 @@ public class GastosDBHelper {
 	
 	public void abrirLecturaBD(Activity ga) {
 		//Abrimos la base de datos 'DBUsuarios' en modo escritura
-        GastosSQLiteHelper gastosdb = new GastosSQLiteHelper(ga, "DBGastos", null, 1);
-        db = gastosdb.getReadableDatabase();
+		GastosSQLiteHelper gastosdb = new GastosSQLiteHelper(ga, "DBGastos", null, 1);
+		db = gastosdb.getReadableDatabase();
 	}
 	
 	public void abrirEscrituraBD(Activity ga) {
@@ -35,6 +35,10 @@ public class GastosDBHelper {
 	
 	public boolean isClosed() {
 		return !db.isOpen();
+	}
+	
+	public void close() {
+		db.close();
 	}
 	
 	public boolean insertarGasto(String nombre, String fecha, Double costo, String descripcion, String tipo, String hora) {
@@ -72,7 +76,7 @@ public class GastosDBHelper {
 		return exito > 0 ? true : false;
 	}
 	
-	public boolean actualizarGasto(String nombre, String costo, String descripcion, String fecha, String hora, String tipo, int id) {
+	public boolean actualizarGasto(String nombre, String fecha, Double costo, String descripcion, String tipo, String hora, int id) {
 		
 		//Creamos el registro a insertar como objeto ContentValues
 		String[] args = new String[] { String.valueOf(id) };
@@ -95,31 +99,31 @@ public class GastosDBHelper {
 
 	public Cursor fetchGastos() {
 		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, "", null, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "", null, null, null, null);
 		return c;
 	}
 	
 	public Cursor fetchGastosHistorial() {
 		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "id" }, "", null, "nombre", null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "", null, "nombre", null, null);
 		return c;
 	}
 	
 	public Cursor fetchGastosDia(String fecha) {
 		
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "id" }, "fecha=?", new String[] { fecha }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "fecha=?", new String[] { fecha }, null, null, null);
 		return c;
 	}
 
 	public Cursor fetchGastosMes(String fecha) {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "id" }, "mes=?", new String[] { separarFecha(fecha, 2) }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "mes=?", new String[] { separarFecha(fecha, 2) }, null, null, null);
 		return c;
 	}
 
 	public Cursor fetchGastosAño(String fecha) {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "id" }, "año=?", new String[] { separarFecha(fecha, 3) }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "año=?", new String[] { separarFecha(fecha, 3) }, null, null, null);
 		return c;
 	}
 	
@@ -175,31 +179,31 @@ public class GastosDBHelper {
 	
 	public Cursor fetchIngresos() {
 		
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, null, null, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, null, null, null, null, "fecha DESC");
 		return c;
 	}
 	
 	public Cursor fetchIngresosHistorial() {
 		
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, null, null, null, null, null);
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, null, null, null, null, null);
 		return c;
 	}
 	
 	public Cursor fetchIngresosDia(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, "fecha=?", new String[] { fecha }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha=?", new String[] { fecha }, null, null, "fecha DESC");
 		return c;
 	}
 	
 	public Cursor fetchIngresosMes(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, "mes=?", new String[] { separarFecha(fecha, 2) }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "mes=?", new String[] { separarFecha(fecha, 2) }, null, null, "fecha DESC");
 		return c;
 	}
 	
 	public Cursor fetchIngresosAño(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "id" }, "año=?", new String[] { separarFecha(fecha, 3) }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "año=?", new String[] { separarFecha(fecha, 3) }, null, null, "fecha DESC");
 		return c;
 	}
 	

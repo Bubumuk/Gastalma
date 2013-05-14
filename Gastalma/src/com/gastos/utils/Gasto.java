@@ -6,15 +6,17 @@ public class Gasto {
 	private String nombre;
 	private String descripcion;
 	private String fecha;
+	private String hora;
 	private int id;
 	
-	public Gasto(String nombre, String costo, String tipo, String descripcion, String fecha, int id) {
+	public Gasto(String nombre, String costo, String tipo, String descripcion, String fecha, String hora, int id) {
 		this.id = id;
 		this.nombre = nombre;
 		this.costo = costo;
 		this.tipo  = tipo;
 		this.descripcion = descripcion;
 		this.fecha = fecha;
+		this.hora = hora;
 	}
 	
 	public Gasto() {
@@ -50,12 +52,16 @@ public class Gasto {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getHora() {
+		return hora;
+	}
+	public void setHora(String hora) {
+		this.hora = hora;
 	}
 }

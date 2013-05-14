@@ -69,7 +69,7 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	
 	private void setUpViews(Bundle extras) {
 	     // Again, the key should be in a constants file!
-	     Bundle extraIngreso = extras.getBundle("com.gastos.utils.Ingreso");
+	     Bundle extraIngreso = extras.getBundle("Ingreso");
 	 
 	     // Deconstruct the Bundle into the AttendeeObject
 	     Ingreso ingreso = unBundleIngreso(extraIngreso);

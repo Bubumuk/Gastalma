@@ -21,7 +21,7 @@ public class ReporteIngresosFragmentAdapter extends FragmentPagerAdapter {
 	public Fragment getItem(int position) {
 		switch(position) {
 			case 0:
-				return ReporteIngresosDiaFragment.newInstance(position);
+				return ReporteIngresosDiaFragment.newInstance(position, this);
 			case 1:
 				return ReporteIngresosMesFragment.newInstance(position);
 			case 3:
@@ -30,7 +30,11 @@ public class ReporteIngresosFragmentAdapter extends FragmentPagerAdapter {
 				return ReporteIngresosFragment.newInstance(position);
 		}
 	}
-
+	
+	public int getItemPosition(Object object) {
+	    return POSITION_NONE;
+	}
+	
 	@Override
 	public int getCount() {
 		return mCount;
@@ -47,4 +51,6 @@ public class ReporteIngresosFragmentAdapter extends FragmentPagerAdapter {
 			default: return "";
 		}
 	}
+	
+	
 }

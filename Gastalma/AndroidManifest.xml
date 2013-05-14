@@ -73,17 +73,17 @@
         </activity>
         <activity
             android:name="com.gastos.gastalma.ReportesGastosActivity"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gastos.gastalma.MenuActivity" />
+                android:value="com.gastos.gastalma.GastosActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.ReportesIngresosActivity"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gastos.gastalma.MenuActivity" />
+                android:value="com.gastos.gastalma.IngresosActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.GastosHistorialActivity"
@@ -105,10 +105,10 @@
         <activity
             android:name="com.gastos.gastalma.PagosHistorialActivity"
             android:label="@string/title_activity_pagos_historial"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.DeudasActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gastos.gastalma.MenuActivity" />
+                android:value="com.gastos.gastalma.DeudasActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.AboutActivity"

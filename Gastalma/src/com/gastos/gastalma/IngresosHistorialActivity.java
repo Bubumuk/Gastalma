@@ -122,7 +122,7 @@ public class IngresosHistorialActivity extends SherlockActivity {
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
 		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getInt(3)));
+		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
 		     } while(c.moveToNext());
 		}
 		

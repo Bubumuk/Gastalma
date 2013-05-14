@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.gastos.gastalma" >
 
-    <PreferenceCategory android:title="@string/inline_preferences" >
+    <PreferenceCategory android:title="Deuda" >
         
         <ListPreference
             android:defaultValue="24"

@@ -5,13 +5,15 @@ public class Ingreso {
 	private String fecha;
 	private String mes;
 	private String descripcion;
+	private String hora;
 	private int id;
 	
-	public Ingreso(String cantidad, String descripcion, String fecha, int id) {
+	public Ingreso(String cantidad, String descripcion, String fecha, String hora, int id) {
 		this.id = id;
 		this.cantidad = cantidad;
 		this.fecha = fecha;
 		this.descripcion = descripcion;
+		this.hora = hora;
 	}
 	
 	public Ingreso() {
@@ -42,12 +44,16 @@ public class Ingreso {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getHora() {
+		return hora;
+	}
+	public void setHora(String hora) {
+		this.hora = hora;
 	}
 }

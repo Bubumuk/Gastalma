@@ -31,6 +31,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 
@@ -86,6 +87,7 @@ public class DeudasActivity extends SherlockActivity {
 		.setMessage("Cantidad mínima por pagar:")
 		.setView(pagar_view)
 		.setPositiveButton("Aceptar", null)
+		.setNegativeButton("Cancelar", null)
 		.create();
         
         calcularPago();
@@ -147,8 +149,12 @@ public class DeudasActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 
+		menu.add(Menu.NONE, 1, Menu.NONE, "Historial")
+			.setIcon(R.drawable.ic_action_time)
+			.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
 		if(deudaDouble > 0) {
-			menu.add(Menu.NONE, 1, Menu.NONE, "pagar")
+			menu.add(Menu.NONE, 2, Menu.NONE, "pagar")
 			.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		}
 		
@@ -170,12 +176,20 @@ public class DeudasActivity extends SherlockActivity {
 			
 				return true;
 			case 1:
+				ViewHistorialPagos();
+				break;
+			case 2:
 				pagarDeuda();
 	            break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	private void ViewHistorialPagos() {
+		Intent myIntentP = new Intent(this, PagosHistorialActivity.class);
+		startActivity(myIntentP);
+	}
+
 	@SuppressLint("SimpleDateFormat")
 	public String getTime() {
     	Calendar cal = Calendar.getInstance();
@@ -208,7 +222,6 @@ public class DeudasActivity extends SherlockActivity {
 		    	
 		    	input.setText(String.format("%.2f", pago_min));
 		    	chmin.setChecked(true);
-		    	
 
 		        Button b = editalert.getButton(AlertDialog.BUTTON_POSITIVE);
 		        b.setOnClickListener(new View.OnClickListener() {

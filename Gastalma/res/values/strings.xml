@@ -78,5 +78,6 @@
     <string name="title_activity_prefs2">Prefs2Activity</string>
     <string name="title_activity_gastos_calendario">Calendario de Gastos</string>
     <string name="title_activity_ingresos_calendario">Calendario de Ingresos</string>
+    <string name="copiar">copiar</string>
 
 </resources>

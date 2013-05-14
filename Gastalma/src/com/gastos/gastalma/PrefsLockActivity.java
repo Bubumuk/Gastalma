@@ -7,7 +7,6 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

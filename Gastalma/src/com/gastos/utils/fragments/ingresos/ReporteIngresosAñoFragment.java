@@ -9,25 +9,31 @@ import net.kapati.widgets.DatePicker;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.gastos.db.GastosDBHelper;
+import com.gastos.gastalma.AgregarIngresoActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
@@ -97,13 +103,14 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
     }
 	
 	private void populateListaIngresosAño() {
+		dbHelper.abrirLecturaBD(getActivity());
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
 		Cursor c = dbHelper.fetchIngresosAño(fDate);
 		//Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 		     //Recorremos el cursor hasta que no haya más registros
 		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getInt(3)));
+		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
 		     } while(c.moveToNext());
 		}
 		
@@ -112,15 +119,15 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 	}
 	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	public void onCreateOptionsMenu(Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		
-		menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
+		.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 			case 3:
 				simulateTouchEvent();
@@ -149,5 +156,82 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 
 		// Dispatch touch event to view
 		text.dispatchTouchEvent(motionEvent);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    MenuInflater inflater = getActivity().getMenuInflater();
+	    inflater.inflate(R.menu.gastos, menu);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    switch (item.getItemId()) {
+	        case R.id.editar:
+	            editarIngreso(info.position);
+	            return true;
+	        case R.id.eliminar:
+	            eliminarIngreso(info.position);
+	            return true;
+	        case R.id.copiar:
+	            copiarIngreso(info.position);
+	            return true;
+	        default:
+	            return super.onContextItemSelected(item);
+	    }
+	}
+	
+	@SuppressLint("ResourceAsColor")
+	private void editarIngreso(int info) {
+		Intent myIntent = new Intent(getActivity(), AgregarIngresoActivity.class);
+		myIntent.putExtra("Ingreso", bundleIngreso((Ingreso)listView.getItemAtPosition(info)));
+		myIntent.putExtra("editar", "editar");
+		startActivityForResult(myIntent, 1);
+	}
+	
+	private void eliminarIngreso(int position) {
+		Toast toast;
+		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
+		if(dbHelper.eliminarIngreso(item.getId())) {
+			toast = Toast.makeText(getActivity(), "Elemento eliminado", Toast.LENGTH_SHORT);
+			toast.show();
+			adapter.remove((Ingreso)listView.getItemAtPosition(position));
+			adapter.notifyDataSetChanged();
+		} else {
+			toast = Toast.makeText(getActivity(), "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
+			toast.show();
+		}
+	}
+	
+	private void copiarIngreso(int position) {
+		Toast toast;
+		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
+		
+		DatePicker dp1 = new DatePicker(getActivity(), null);
+		
+		double cantidad = Double.parseDouble(item.getCantidad());
+		
+		dp1.performClick();
+		
+		dbHelper.insertarIngreso(
+				cantidad,
+				dp1.getDate(),
+				item.getDescripcion(),
+				item.getHora());
+		
+		toast = Toast.makeText(getActivity(), "Elemento copiado", Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	public Bundle bundleIngreso(Ingreso ingreso){
+	     Bundle bundle = new Bundle();
+	     bundle.putInt("id", ingreso.getId());
+	     bundle.putString("cantidad", ingreso.getCantidad());
+	     bundle.putString("descripcion", ingreso.getDescripcion());
+	     bundle.putString("fecha", ingreso.getFecha());
+	   
+	     return bundle;
 	}
 }
