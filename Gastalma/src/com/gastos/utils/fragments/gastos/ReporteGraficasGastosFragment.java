@@ -2,11 +2,6 @@ package com.gastos.utils.fragments.gastos;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.gastos.gastalma.R;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphViewStyle;
-import com.jjoe64.graphview.LineGraphView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -69,7 +64,7 @@ public final class ReporteGraficasGastosFragment extends SherlockListFragment {
 			LayoutInflater mInflater = (LayoutInflater)context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.recent_activity_row, null);
-
+/*
 				// init example series data
 				GraphViewSeries exampleSeries = new GraphViewSeries(new GraphViewData[] {
 						new GraphViewData(1, 2.0d)
@@ -95,7 +90,7 @@ public final class ReporteGraficasGastosFragment extends SherlockListFragment {
 				graphView.addSeries(exampleSeries); // data
 
 				LinearLayout layout = (LinearLayout) convertView.findViewById(R.id.graph_layout);
-				layout.addView(graphView);
+				layout.addView(graphView);*/
 			}
 			return convertView;
 		}

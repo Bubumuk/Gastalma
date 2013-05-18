@@ -75,13 +75,16 @@ public class GastosActivity extends SherlockActivity {
         
         listView.setOnItemClickListener(new OnItemClickListener() {
 
+			@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(GastosActivity.this);
 				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
 				
-				builder.setTitle("Detalle: "+gasto.getNombre())
-					.setMessage(gasto.getDescripcion())
+				String descripcion = gasto.getDescripcion().isEmpty() ? "No hay descripción" : gasto.getDescripcion();
+				
+				builder.setTitle(gasto.getNombre())
+					.setMessage(descripcion)
 					.setPositiveButton("Aceptar", new OnClickListener() {
 				        public void onClick(DialogInterface dialog, int which) {
 				            dialog.cancel();

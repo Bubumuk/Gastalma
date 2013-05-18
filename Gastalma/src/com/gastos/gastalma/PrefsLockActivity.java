@@ -67,7 +67,7 @@ public class PrefsLockActivity extends SherlockPreferenceActivity {
 	}
 
 	private void setupActionBar() {
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@Override

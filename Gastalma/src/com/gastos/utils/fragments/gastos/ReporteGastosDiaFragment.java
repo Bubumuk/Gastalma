@@ -16,6 +16,7 @@ import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
@@ -113,13 +115,16 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
         
         listView.setOnItemClickListener(new OnItemClickListener() {
 
+			@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
 				
+				String descripcion = gasto.getDescripcion().isEmpty() ? "No hay descripción" : gasto.getDescripcion();
+				
 				builder.setTitle(gasto.getNombre())
-					.setMessage(gasto.getDescripcion())
+					.setMessage(descripcion)
 					.setPositiveButton("Aceptar", new OnClickListener() {
 				        public void onClick(DialogInterface dialog, int which) {
 				            dialog.cancel();
