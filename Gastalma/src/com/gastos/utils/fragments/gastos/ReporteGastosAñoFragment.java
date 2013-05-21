@@ -1,11 +1,36 @@
 package com.gastos.utils.fragments.gastos;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import net.kapati.widgets.DatePicker;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -15,45 +40,17 @@ import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.DialogInterface.OnClickListener;
-import android.database.Cursor;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.format.DateFormat;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
-
 public final class ReporteGastosAñoFragment extends SherlockFragment {
 	private String fDate;
+	private Date cDate;
 	private ListView listView;
 	private GastosAdapter adapter;
 	private GastosDBHelper dbHelper;
-	private DatePicker text;
+	private TextView text;
 	private SimpleDateFormat sdf;
 	private SharedPreferences prefs;
+	private String lDate;
+	private Locale loc_mx;
 
     public static ReporteGastosAñoFragment newInstance(int position) {
         ReporteGastosAñoFragment fragment = new ReporteGastosAñoFragment();
@@ -67,8 +64,12 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
         
         dbHelper = new GastosDBHelper();
         dbHelper.abrirLecturaBD(getActivity());
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
-		fDate = sdf.format(new Date());
+        
+        cDate = new Date();
+        loc_mx = new Locale("es","MX");
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+		fDate = sdf.format(cDate);
+		lDate = new SimpleDateFormat("yyyy", loc_mx).format(cDate);
 		
 		setHasOptionsMenu(true);
     }
@@ -76,17 +77,20 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		text = (DatePicker)inflater.inflate(R.layout.datepicker, null);
-		text.setDateFormat(DateFormat.getLongDateFormat(getActivity()));
+		//text = (DatePicker)inflater.inflate(R.layout.datepicker, null);
+		//text.setDateFormat(DateFormat.getLongDateFormat(getActivity()));
+		text = new TextView(getActivity());
         text.setPadding(6, 6, 6, 6);
         text.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        
+        text.setText(lDate);
+        text.setBackgroundResource(R.color.abs__holo_blue_light);
+        /*
         text.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
             	fDate = text.getDate();
-            	populateListaGastosAño();
+            	populateListaGastosDia();
             }
 
             @Override
@@ -96,7 +100,11 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-        });
+        });*/
+        
+        View line = new View(getActivity());
+        line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
+        line.setBackgroundColor(0xFF3C3C3C);
         
         listView = new ListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -105,6 +113,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.addView(text);
+        //layout.addView(line);
         layout.addView(listView);
         
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -139,39 +148,36 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	
 	private void populateListaGastosAño() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Gasto> lista_gastos = new ArrayList<Gasto>();
-		Cursor c = dbHelper.fetchGastosAño(fDate);
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
-		     } while(c.moveToNext());
-		}
+		List<Gasto> lista_gastos = dbHelper.fetchGastosAño(fDate);
         
 		adapter = new GastosAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
-		dbHelper.close();
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onCreateOptionsMenu(Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		
 		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
 		.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
+		
+		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
+    	.setIcon(R.drawable.ic_action_go_to_today)
+    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
 			case 3:
-				simulateTouchEvent();
+				//simulateTouchEvent();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	/*
 	@SuppressLint("Recycle")
 	private void simulateTouchEvent() {
 		// Obtain MotionEvent object
@@ -193,7 +199,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		// Dispatch touch event to view
 		text.dispatchTouchEvent(motionEvent);
 	}
-	
+	*/
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
@@ -221,7 +227,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	
 	@SuppressLint("ResourceAsColor")
 	private void editarGasto(int info) {
-		dbHelper.abrirLecturaBD(getActivity());
+		dbHelper.abrirEscrituraBD(getActivity());
 		Intent myIntent = new Intent(getActivity(), AgregarGastoActivity.class);
 		myIntent.putExtra("Gasto", bundleGasto((Gasto)listView.getItemAtPosition(info)));
 		myIntent.putExtra("editar", "editar");
@@ -229,7 +235,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	}
 	
 	private void eliminarGasto(int position) {
-		dbHelper.abrirLecturaBD(getActivity());
+		dbHelper.abrirEscrituraBD(getActivity());
 		Toast toast;
 		Gasto item = (Gasto)listView.getItemAtPosition(position);
 		if(dbHelper.eliminarGasto(item.getId())) {
@@ -244,7 +250,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	}
 	
 	private void copiarGasto(int position) {
-		dbHelper.abrirLecturaBD(getActivity());
+		dbHelper.abrirEscrituraBD(getActivity());
 		Toast toast;
 		Gasto item = (Gasto)listView.getItemAtPosition(position);
 		
@@ -281,7 +287,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		editor.putString("deuda", deuda_nueva + "");
 		editor.commit();
 	}
-	
+
 	public Bundle bundleGasto(Gasto gasto){
 	     Bundle bundle = new Bundle();
 	     bundle.putInt("id", gasto.getId());

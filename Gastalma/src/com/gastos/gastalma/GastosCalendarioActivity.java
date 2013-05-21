@@ -35,6 +35,7 @@ public class GastosCalendarioActivity extends SherlockActivity {
 
 		calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
 		calendar.init(cDate, lastYear.getTime(), maxDate.getTime());
+		//calendar.selectDate(cDate);
 	}
 
 	public void returnFecha(View view) {

@@ -2,10 +2,10 @@
 
     <!-- Strings related to Settings -->
 	<string-array name="locations">
-        <item >Día</item>
-        <item >Mes</item>
-        <item >Año</item>
-        <item >Semana</item>
+        <item >Gastos por Día</item>
+        <item >Gastos por Mes</item>
+        <item >Gastos por Año</item>
+        <item >Gastos por Semana</item>
     </string-array>
 
     <!-- General settings -->

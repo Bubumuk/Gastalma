@@ -1,38 +1,36 @@
 package com.gastos.gastalma;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.gastos.db.GastosDBHelper;
-import com.gastos.utils.Gasto;
-import com.gastos.utils.GastosAdapter;
-
-import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.support.v4.app.NavUtils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
+import com.gastos.db.GastosDBHelper;
+import com.gastos.utils.Gasto;
+import com.gastos.utils.GastosAdapter;
 
 public class GastosActivity extends SherlockActivity {
 	
@@ -56,7 +54,7 @@ public class GastosActivity extends SherlockActivity {
 		loc_mx = new Locale("es","MX");
 		
 		cDate = new Date();
-		fDate = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+		fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
 		textDia = (TextView)findViewById(R.id.textView1);
 		textDia.setText(lDate);
@@ -99,19 +97,10 @@ public class GastosActivity extends SherlockActivity {
 	
 	private void populateListaGastos() {
 		dbHelper.abrirLecturaBD(this);
-		List<Gasto> lista_gastos = new ArrayList<Gasto>();
-		Cursor c = dbHelper.fetchGastosDia(fDate);
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
-		     } while(c.moveToNext());
-		}
+		List<Gasto> lista_gastos = dbHelper.fetchGastosDia(fDate);
         
 		adapter = new GastosAdapter(this, android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
-		dbHelper.close();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)

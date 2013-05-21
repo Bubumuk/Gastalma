@@ -1,10 +1,21 @@
 package com.gastos.gastalma;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -14,19 +25,6 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosHistorialAdapter;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.database.Cursor;
-import android.support.v4.app.NavUtils;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 public class GastosHistorialActivity extends SherlockActivity {
 
@@ -118,15 +116,7 @@ public class GastosHistorialActivity extends SherlockActivity {
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void populateListaGastos() {
-		List<Gasto> lista_gastos = new ArrayList<Gasto>();
-		Cursor c = dbHelper.fetchGastosHistorial();
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
-		     } while(c.moveToNext());
-		}
+		List<Gasto> lista_gastos = dbHelper.fetchGastosHistorial();
 		
 		adapter = new GastosHistorialAdapter(this, R.layout.list_row, lista_gastos);
 		listView.setAdapter(adapter);

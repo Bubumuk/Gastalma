@@ -1,10 +1,20 @@
 package com.gastos.gastalma;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -14,18 +24,6 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosHistorialAdapter;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.support.v4.app.NavUtils;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.database.Cursor;
-import android.os.Build;
 
 public class IngresosHistorialActivity extends SherlockActivity {
 
@@ -116,15 +114,7 @@ public class IngresosHistorialActivity extends SherlockActivity {
 	
 	private void populateListaIngresos() {
 		
-		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
-		Cursor c = dbHelper.fetchIngresosHistorial();
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
-		     } while(c.moveToNext());
-		}
+		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosHistorial();
 		
         adapter = new IngresosHistorialAdapter(this, R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);

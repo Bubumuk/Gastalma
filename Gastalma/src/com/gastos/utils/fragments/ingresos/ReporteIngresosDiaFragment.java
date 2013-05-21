@@ -1,12 +1,32 @@
 package com.gastos.utils.fragments.ingresos;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import net.kapati.widgets.DatePicker;
 import net.kapati.widgets.DatePicker.OnDateSetListener;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.format.DateFormat;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
@@ -16,29 +36,6 @@ import com.gastos.gastalma.R;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
 import com.gastos.utils.ReporteIngresosFragmentAdapter;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.format.DateFormat;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.widget.LinearLayout;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 
 public final class ReporteIngresosDiaFragment extends SherlockFragment {
 	private String fDate;
@@ -62,7 +59,7 @@ public final class ReporteIngresosDiaFragment extends SherlockFragment {
         
         dbHelper = new GastosDBHelper();
         dbHelper.abrirLecturaBD(getActivity());
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
 		fDate = sdf.format(new Date());
 		
 		setHasOptionsMenu(true);
@@ -110,15 +107,7 @@ public final class ReporteIngresosDiaFragment extends SherlockFragment {
 	
 	private void populateListaIngresosDia() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
-		Cursor c = dbHelper.fetchIngresosDia(fDate);
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
-		     } while(c.moveToNext());
-		}
+		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosDia(fDate);
 		
         adapter = new IngresosAdapter(getActivity(), R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);

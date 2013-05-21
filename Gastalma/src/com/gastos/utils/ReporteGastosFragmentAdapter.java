@@ -4,6 +4,7 @@ import com.gastos.utils.fragments.gastos.ReporteGastosAñoFragment;
 import com.gastos.utils.fragments.gastos.ReporteGastosDiaFragment;
 import com.gastos.utils.fragments.gastos.ReporteGastosFragment;
 import com.gastos.utils.fragments.gastos.ReporteGastosMesFragment;
+import com.gastos.utils.fragments.gastos.ReporteGastosSemanaFragment;
 import com.gastos.utils.fragments.gastos.ReporteGraficasGastosFragment;
 
 import android.support.v4.app.Fragment;

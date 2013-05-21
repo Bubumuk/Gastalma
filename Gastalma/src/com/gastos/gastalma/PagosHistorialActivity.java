@@ -1,7 +1,10 @@
 package com.gastos.gastalma;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -9,11 +12,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Pago;
 import com.gastos.utils.PagosHistorialAdapter;
-
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.widget.ListView;
 
 public class PagosHistorialActivity extends SherlockActivity {
 
@@ -39,15 +37,8 @@ public class PagosHistorialActivity extends SherlockActivity {
 	}
 
 	private void populateListaPagos() {
-		List<Pago> lista_pagos = new ArrayList<Pago>();
-		Cursor c = dbHelper.fetchPagos();
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_pagos.add(new Pago(c.getDouble(0), c.getString(1), c.getString(2)));
-		     } while(c.moveToNext());
-		}
+		
+		List<Pago> lista_pagos = dbHelper.fetchPagos();
 		
         adapter = new PagosHistorialAdapter(this, R.layout.list_row, lista_pagos);
         listView.setAdapter(adapter);

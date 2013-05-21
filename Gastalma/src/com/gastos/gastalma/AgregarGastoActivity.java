@@ -1,7 +1,9 @@
 package com.gastos.gastalma;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import net.kapati.widgets.DatePicker;
 
@@ -156,10 +158,19 @@ public class AgregarGastoActivity extends SherlockActivity {
 		double costo = Double.parseDouble(txt2.getText().toString());
 		boolean isChecked = rr.isChecked();
 		String tipo = isChecked ? "Débito" : "Crédito";
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(this);
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		dbHelper.insertarGasto(
 				txt1.getText().toString(),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				costo,
 				txt3.getText().toString(),
 				tipo,
@@ -209,10 +220,19 @@ public class AgregarGastoActivity extends SherlockActivity {
 		double costo = Double.parseDouble(txt2.getText().toString());
 		boolean isChecked = rr.isChecked();
 		String tipo = isChecked ? "Débito" : "Crédito";
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(this);
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		boolean exito = dbHelper.actualizarGasto(
 				txt1.getText().toString(),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				costo,
 				txt3.getText().toString(),
 				tipo,

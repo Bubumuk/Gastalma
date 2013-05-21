@@ -24,12 +24,14 @@
         </activity>
         <activity
             android:name="com.gastos.gastalma.MenuActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.gastos.gastalma.GastosActivity"
             android:label="@string/title_activity_gastos"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.MenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
@@ -37,7 +39,8 @@
         <activity
             android:name="com.gastos.gastalma.AgregarGastoActivity"
             android:label="@string/title_activity_agregar_gasto"
-            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            android:parentActivityName="com.gastos.gastalma.GastosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.GastosActivity" />
@@ -45,19 +48,22 @@
         <activity
             android:name="com.gastos.gastalma.IngresosActivity"
             android:label="@string/title_activity_ingresos"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.MenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.AgregarIngresoActivity"
-            android:label="@string/title_activity_agregar_ingreso" >
+            android:label="@string/title_activity_agregar_ingreso"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.gastos.gastalma.DeudasActivity"
             android:label="@string/title_activity_deudas"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.MenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
@@ -66,21 +72,24 @@
             android:name="com.gastos.gastalma.PrefsActivity"
             android:label="@string/title_activity_prefs"
             android:parentActivityName="com.gastos.gastalma.MenuActivity"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.ReportesGastosActivity"
-            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            android:parentActivityName="com.gastos.gastalma.GastosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.GastosActivity" />
         </activity>
         <activity
             android:name="com.gastos.gastalma.ReportesIngresosActivity"
-            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.IngresosActivity" />
@@ -89,7 +98,8 @@
             android:name="com.gastos.gastalma.GastosHistorialActivity"
             android:label="@string/title_activity_historial"
             android:parentActivityName="com.gastos.gastalma.GastosActivity"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.GastosActivity" />
@@ -97,7 +107,8 @@
         <activity
             android:name="com.gastos.gastalma.IngresosHistorialActivity"
             android:label="@string/title_activity_ingresos_historial"
-            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.IngresosActivity" />
@@ -105,7 +116,8 @@
         <activity
             android:name="com.gastos.gastalma.PagosHistorialActivity"
             android:label="@string/title_activity_pagos_historial"
-            android:parentActivityName="com.gastos.gastalma.DeudasActivity" >
+            android:parentActivityName="com.gastos.gastalma.DeudasActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.DeudasActivity" />
@@ -113,7 +125,8 @@
         <activity
             android:name="com.gastos.gastalma.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName="com.gastos.gastalma.MenuActivity" >
+            android:parentActivityName="com.gastos.gastalma.MenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.MenuActivity" />
@@ -121,13 +134,14 @@
         <activity
             android:name="group.pals.android.lib.ui.lockpattern.LockPatternActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|keyboard"
-            android:screenOrientation="user"
+            android:screenOrientation="portrait"
             android:theme="@style/Alp.Theme.Dialog.Dark" >
         </activity>
         <activity
             android:name="com.gastos.gastalma.PrefsLockActivity"
             android:label="@string/title_activity_prefs"
-            android:theme="@style/Theme.Sherlock" >
+            android:theme="@style/Theme.Sherlock"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.PrefsActivity" />
@@ -135,7 +149,8 @@
         <activity
             android:name="com.gastos.gastalma.GastosCalendarioActivity"
             android:label="@string/title_activity_gastos_calendario"
-            android:parentActivityName="com.gastos.gastalma.GastosActivity" >
+            android:parentActivityName="com.gastos.gastalma.GastosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.GastosActivity" />
@@ -143,10 +158,16 @@
         <activity
             android:name="com.gastos.gastalma.IngresosCalendarioActivity"
             android:label="@string/title_activity_ingresos_calendario"
-            android:parentActivityName="com.gastos.gastalma.IngresosActivity" >
+            android:parentActivityName="com.gastos.gastalma.IngresosActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gastos.gastalma.IngresosActivity" />
+        </activity>
+        <activity
+            android:name="com.gastos.gastalma.GastosCalendarioMesActivity"
+            android:label="@string/title_activity_gastos_calendario_mes"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

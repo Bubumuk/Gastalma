@@ -18,6 +18,7 @@
     </style>
     
     <color name="alert">#FA4042</color>
+    <color name="calendar_divider">#ffbababa</color>
 
     <style name="MyTheme.ActionBarStyle" parent="Widget.Sherlock.ActionBar">
         <item name="background">#6dc066</item>

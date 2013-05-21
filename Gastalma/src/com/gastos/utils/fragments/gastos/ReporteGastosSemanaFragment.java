@@ -1,6 +1,7 @@
 package com.gastos.utils.fragments.gastos;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,8 +42,9 @@ import com.gastos.gastalma.GastosCalendarioActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
+import com.gastos.utils.fragments.ingresos.ReporteIngresosFragment;
 
-public final class ReporteGastosDiaFragment extends SherlockFragment {
+public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	private String fDate;
 	private Date cDate;
 	private ListView listView;
@@ -53,9 +55,12 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 	private SharedPreferences prefs;
 	private String lDate;
 	private Locale loc_mx;
+	private Date start;
+	private Date end;
+	private String lDate2;
 
-    public static ReporteGastosDiaFragment newInstance(int position) {
-        ReporteGastosDiaFragment fragment = new ReporteGastosDiaFragment();
+    public static ReporteIngresosFragment newInstance(int position) {
+        ReporteIngresosFragment fragment = new ReporteIngresosFragment();
         return fragment;
     }
 
@@ -71,9 +76,13 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
         loc_mx = new Locale("es","MX");
         sdf = new SimpleDateFormat("yyyy-MM-dd");
 		fDate = sdf.format(cDate);
-		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
 		
 		setHasOptionsMenu(true);
+		
+		calcularSemana();
+		
+		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(end);
+		lDate2 = new SimpleDateFormat("EEEE, d 'de' MMMM", loc_mx).format(start);
     }
 
 	@Override
@@ -84,7 +93,7 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 		text = new TextView(getActivity());
         text.setPadding(6, 6, 6, 6);
         text.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        text.setText(lDate);
+        text.setText(lDate2 + " al " + lDate);
         text.setBackgroundResource(R.color.abs__holo_blue_light);
         /*
         text.addTextChangedListener(new TextWatcher() {
@@ -141,16 +150,36 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 			}
 		});
         
-        populateListaGastosDia();
+        populateListaGastosSemana();
         
         registerForContextMenu(listView);
 
         return layout;
     }
 	
-	private void populateListaGastosDia() {
+	private void calcularSemana() {
+
+		// get today and clear time of day
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the
+											// hour of day !
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+
+		// get start of this week in milliseconds
+		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+
+		start = cal.getTime();
+
+		// start of the next week
+		cal.add(Calendar.DAY_OF_WEEK, 6);
+		end = cal.getTime();
+	}
+	
+	private void populateListaGastosSemana() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Gasto> lista_gastos = dbHelper.fetchGastosDia(fDate);
+		List<Gasto> lista_gastos = dbHelper.fetchGastosSemana(sdf.format(start), sdf.format(end));
         
 		adapter = new GastosAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
@@ -164,15 +193,15 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
 		.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 		
-		menu.add(Menu.NONE, 4, Menu.NONE, "fecha")
+		menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
     	.setIcon(R.drawable.ic_action_go_to_today)
-    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
-			case 4:
+			case 3:
 				//simulateTouchEvent();
 				ViewCalendarioGastos();
 				break;
@@ -321,7 +350,7 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
     		fDate = fecha;
     		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
     		text.setText(lDate);
-	    	populateListaGastosDia();
+	    	populateListaGastosSemana();
 	    }
 	}
 }

@@ -1,7 +1,6 @@
 package com.gastos.gastalma;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -9,7 +8,6 @@ import java.util.Locale;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -102,15 +100,7 @@ public class IngresosActivity extends SherlockActivity {
 	
 	private void populateListaIngresos() {
 		
-		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
-		Cursor c = dbHelper.fetchIngresosMes(lDate);
-		//Nos aseguramos de que existe al menos un registro
-		if (c.moveToFirst()) {
-		     //Recorremos el cursor hasta que no haya más registros
-		     do {
-		    	 lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
-		     } while(c.moveToNext());
-		}
+		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosMes(lDate);
 		
         adapter = new IngresosAdapter(this,R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);

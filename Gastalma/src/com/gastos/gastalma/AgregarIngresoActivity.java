@@ -1,7 +1,9 @@
 package com.gastos.gastalma;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import net.kapati.widgets.DatePicker;
 
@@ -151,10 +153,19 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	}
 	
 	private void actualizarIngreso() {
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(this);
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		dbHelper.actualizarIngreso(
 				txt2.getText().toString(),
 				txt3.getText().toString(),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				id);
 		
 		toast = Toast.makeText(getApplicationContext(), "Elemento actualizado", Toast.LENGTH_SHORT);
@@ -162,9 +173,18 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	}
 	
 	private void agregarIngreso() {
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(this);
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		dbHelper.insertarIngreso(
 				Double.parseDouble(txt2.getText().toString()),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				txt3.getText().toString(),
 				getTime());
 		
