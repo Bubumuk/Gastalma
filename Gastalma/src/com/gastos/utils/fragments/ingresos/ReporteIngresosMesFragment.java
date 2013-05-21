@@ -1,46 +1,53 @@
 package com.gastos.utils.fragments.ingresos;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import net.kapati.widgets.DatePicker;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarIngresoActivity;
+import com.gastos.gastalma.IngresosCalendarioMesActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
 
 public final class ReporteIngresosMesFragment extends SherlockFragment {
 	private String fDate;
+	private Date cDate;
 	private ListView listView;
 	private IngresosAdapter adapter;
 	private GastosDBHelper dbHelper;
-	private DatePicker text;
+	private TextView text;
 	private SimpleDateFormat sdf;
+	private String lDate;
+	private Locale loc_mx;
 
     public static ReporteIngresosMesFragment newInstance(int position) {
         ReporteIngresosMesFragment fragment = new ReporteIngresosMesFragment();
@@ -54,8 +61,12 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
         
         dbHelper = new GastosDBHelper();
         dbHelper.abrirLecturaBD(getActivity());
+        
+        cDate = new Date();
+        loc_mx = new Locale("es","MX");
         sdf = new SimpleDateFormat("yyyy-MM-dd");
-		fDate = sdf.format(new Date());
+		fDate = sdf.format(cDate);
+		lDate = new SimpleDateFormat("MMMM", loc_mx).format(cDate);
 		
 		setHasOptionsMenu(true);
     }
@@ -63,17 +74,20 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		text = (DatePicker)inflater.inflate(R.layout.datepicker, null);
-		text.setDateFormat(DateFormat.getLongDateFormat(getActivity()));
+		//text = (DatePicker)inflater.inflate(R.layout.datepicker, null);
+		//text.setDateFormat(DateFormat.getLongDateFormat(getActivity()));
+		text = new TextView(getActivity());
         text.setPadding(6, 6, 6, 6);
         text.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        
+        text.setText(lDate);
+        text.setBackgroundResource(R.color.abs__holo_blue_light);
+        /*
         text.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
             	fDate = text.getDate();
-            	populateListaIngresosMes();
+            	populateListaGastosDia();
             }
 
             @Override
@@ -83,7 +97,11 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
-        });
+        });*/
+        
+        View line = new View(getActivity());
+        line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
+        line.setBackgroundColor(0xFF3C3C3C);
         
         listView = new ListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
@@ -92,8 +110,9 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.addView(text);
+        //layout.addView(line);
         layout.addView(listView);
-
+        
         populateListaIngresosMes();
         
         registerForContextMenu(listView);
@@ -109,44 +128,35 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
         listView.setAdapter(adapter);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	public void onCreateOptionsMenu(Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		
 		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
 		.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
+		
+		menu.add(Menu.NONE, 4, Menu.NONE, "fecha")
+    	.setIcon(R.drawable.ic_action_go_to_today)
+    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
-			case 3:
-				simulateTouchEvent();
+			case 4:
+				//simulateTouchEvent();
+				ViewCalendarioMesIngresos();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@SuppressLint("Recycle")
-	private void simulateTouchEvent() {
-		// Obtain MotionEvent object
-		long downTime = SystemClock.uptimeMillis();
-		long eventTime = SystemClock.uptimeMillis() + 100;
-		float x = 0.0f;
-		float y = 0.0f;
-		// List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-		int metaState = 0;
-		MotionEvent motionEvent = MotionEvent.obtain(
-		    downTime, 
-		    eventTime, 
-		    MotionEvent.ACTION_UP,
-		    x, 
-		    y, 
-		    metaState
-		);
-
-		// Dispatch touch event to view
-		text.dispatchTouchEvent(motionEvent);
+	private void ViewCalendarioMesIngresos() {
+		Intent myIntent = new Intent(getActivity(), IngresosCalendarioMesActivity.class);
+		myIntent.putExtra("mes_seleccionado", cDate.getMonth());
+		startActivityForResult(myIntent, 1);
+		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 	}
 
 	@Override
@@ -206,9 +216,19 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 		
 		dp1.performClick();
 		
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(getActivity());
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		dbHelper.insertarIngreso(
 				cantidad,
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				item.getDescripcion(),
 				item.getHora());
 		
@@ -224,5 +244,29 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	     bundle.putString("fecha", ingreso.getFecha());
 	   
 	     return bundle;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	    super.onActivityResult(requestCode, resultCode, intent);
+	    
+	    if(resultCode == Activity.RESULT_OK) {
+	    	int mes = intent.getIntExtra("mes", -1);
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.clear(Calendar.MINUTE);
+			cal.clear(Calendar.SECOND);
+			cal.clear(Calendar.MILLISECOND);
+
+			cal.set(Calendar.MONTH, mes);
+
+			cDate = cal.getTime();
+			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+
+			fDate = fecha;
+			lDate = new SimpleDateFormat("MMMM", loc_mx).format(cDate);
+			text.setText(lDate);
+    		populateListaIngresosMes();
+	    }
 	}
 }

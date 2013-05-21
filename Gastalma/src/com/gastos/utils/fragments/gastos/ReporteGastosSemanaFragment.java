@@ -1,5 +1,6 @@
 package com.gastos.utils.fragments.gastos;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -42,7 +44,6 @@ import com.gastos.gastalma.GastosCalendarioActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
-import com.gastos.utils.fragments.ingresos.ReporteIngresosFragment;
 
 public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	private String fDate;
@@ -59,8 +60,8 @@ public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	private Date end;
 	private String lDate2;
 
-    public static ReporteIngresosFragment newInstance(int position) {
-        ReporteIngresosFragment fragment = new ReporteIngresosFragment();
+    public static ReporteGastosSemanaFragment newInstance(int position) {
+    	ReporteGastosSemanaFragment fragment = new ReporteGastosSemanaFragment();
         return fragment;
     }
 
@@ -301,9 +302,19 @@ public final class ReporteGastosSemanaFragment extends SherlockFragment {
 		
 		dp1.performClick();
 		
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(getActivity());
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		dbHelper.insertarGasto(
 				item.getNombre(),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				costo,
 				item.getDescripcion(),
 				tipo,
@@ -346,7 +357,7 @@ public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	    if(resultCode == Activity.RESULT_OK) {
 	    	long fecha_long = intent.getLongExtra("fecha", -1);
     		cDate = new Date(fecha_long);
-			String fecha = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
     		fDate = fecha;
     		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
     		text.setText(lDate);

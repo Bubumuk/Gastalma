@@ -1,31 +1,26 @@
 package com.gastos.gastalma;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.view.Gravity;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.SpinnerAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.LayoutParams;
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
-import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
-import com.actionbarsherlock.internal.widget.IcsLinearLayout;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
+import com.gastos.utils.fragments.gastos.ReporteGastosDiaFragment;
 import com.gastos.utils.fragments.ingresos.ReporteIngresosAñoFragment;
 import com.gastos.utils.fragments.ingresos.ReporteIngresosDiaFragment;
 import com.gastos.utils.fragments.ingresos.ReporteIngresosFragment;
 import com.gastos.utils.fragments.ingresos.ReporteIngresosMesFragment;
+import com.gastos.utils.fragments.ingresos.ReporteIngresosSemanaFragment;
 
-public class ReportesIngresosActivity extends SherlockFragmentActivity implements OnItemSelectedListener {
+public class ReportesIngresosActivity extends SherlockFragmentActivity {
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +34,7 @@ public class ReportesIngresosActivity extends SherlockFragmentActivity implement
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         //add a fragment
-        ReporteIngresosDiaFragment myFragment = new ReporteIngresosDiaFragment();
+        ReporteGastosDiaFragment myFragment = new ReporteGastosDiaFragment();
         fragmentTransaction.add(R.id.myfragment, myFragment);
         fragmentTransaction.commit();
     }
@@ -77,8 +72,8 @@ public class ReportesIngresosActivity extends SherlockFragmentActivity implement
 	}
 	
 	private void setupActionBar() {
-		setTitle("Reporte Ingresos");
-		
+		setTitle("");
+		/*
 		Context context = getSupportActionBar().getThemedContext();
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.locations, R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
@@ -94,51 +89,56 @@ public class ReportesIngresosActivity extends SherlockFragmentActivity implement
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
         params.gravity = Gravity.CENTER;
         listNavLayout.addView(spinner, params);
-        listNavLayout.setGravity(Gravity.RIGHT);        // <-- align the spinner to the right
+        listNavLayout.setGravity(Gravity.LEFT);        // <-- align the spinner to the right
 
         // configure action bar
-        getSupportActionBar().setCustomView(listNavLayout, new ActionBar.LayoutParams(Gravity.RIGHT));
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(listNavLayout, new ActionBar.LayoutParams(Gravity.LEFT));
+        getSupportActionBar().setDisplayShowCustomEnabled(true);*/
+		
+		SpinnerAdapter adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(), R.array.locations_ingresos, R.layout.sherlock_spinner_dropdown_item);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		getSupportActionBar().setListNavigationCallbacks(adapter, new OnNavigationListener() {
+			
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+				//Toast.makeText(ReportesIngresosActivity.this, "Item selected: " + mLocations[position], Toast.LENGTH_SHORT).show();
+				Fragment newFragment;
+
+				// Create new fragment
+				switch(itemPosition) {
+				case 0:
+					newFragment = new ReporteIngresosDiaFragment();
+					break;
+				case 1:
+					newFragment = new ReporteIngresosMesFragment();
+					break;
+				case 2:
+					newFragment = new ReporteIngresosAñoFragment();
+					break;
+				case 3:
+					newFragment = new ReporteIngresosSemanaFragment();
+					break;
+				default:
+					newFragment = new ReporteIngresosFragment();
+					break;
+				}
+
+				// Create new transaction
+				// get an instance of FragmentTransaction from your Activity
+		        FragmentManager fragmentManager = getSupportFragmentManager();
+		        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+				// Replace whatever is in the fragment_container view with this fragment
+		        fragmentTransaction.replace(R.id.myfragment, newFragment);
+
+				// Commit the transaction
+		        fragmentTransaction.commit();
+
+				return true;
+			}
+		});
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	}
-
-	@Override
-	public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
-
-		//Toast.makeText(ReportesIngresosActivity.this, "Item selected: " + mLocations[position], Toast.LENGTH_SHORT).show();
-		Fragment newFragment;
-
-		// Create new fragment
-		switch(position) {
-		case 0:
-			newFragment = new ReporteIngresosDiaFragment();
-			break;
-		case 1:
-			newFragment = new ReporteIngresosMesFragment();
-			break;
-		case 2:
-			newFragment = new ReporteIngresosAñoFragment();
-			break;
-		default:
-			newFragment = new ReporteIngresosFragment();
-			break;
-		}
-
-		// Create new transaction
-		// get an instance of FragmentTransaction from your Activity
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-		// Replace whatever is in the fragment_container view with this fragment
-        fragmentTransaction.replace(R.id.myfragment, newFragment);
-
-		// Commit the transaction
-        fragmentTransaction.commit();
-
-	}
-
-	@Override
-	public void onNothingSelected(IcsAdapterView<?> parent) {		
 	}
 	
 	@Override

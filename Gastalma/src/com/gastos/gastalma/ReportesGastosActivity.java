@@ -94,7 +94,7 @@ public class ReportesGastosActivity extends SherlockFragmentActivity {
         getSupportActionBar().setCustomView(listNavLayout, new ActionBar.LayoutParams(Gravity.LEFT));
         getSupportActionBar().setDisplayShowCustomEnabled(true);*/
 		
-		SpinnerAdapter adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(), R.array.locations, R.layout.sherlock_spinner_dropdown_item);
+		SpinnerAdapter adapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(), R.array.locations_gastos, R.layout.sherlock_spinner_dropdown_item);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		
 		getSupportActionBar().setListNavigationCallbacks(adapter, new OnNavigationListener() {

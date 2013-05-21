@@ -3,16 +3,15 @@ package com.gastos.gastalma;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.view.View;
+
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.squareup.timessquare.CalendarPickerView;
-import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
-
-import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.annotation.SuppressLint;
-import android.content.Intent;
 
 public class IngresosCalendarioActivity extends SherlockActivity {
 
@@ -36,22 +35,16 @@ public class IngresosCalendarioActivity extends SherlockActivity {
 
 		calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
 		calendar.init(cDate, lastYear.getTime(), maxDate.getTime());
-		
-		calendar.setOnDateSelectedListener(new OnDateSelectedListener() {
-			
-			@SuppressLint("SimpleDateFormat")
-			@Override
-			public void onDateSelected(Date date) {
-				//String fecha = new SimpleDateFormat("dd/MM/yyyy").format(date);
-				//Toast.makeText(GastosCalendarioActivity.this, fecha, Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent();
-				intent.putExtra("fecha", date.getTime());
-				setResult(RESULT_OK, intent);
-				finish();
-			}
-		});
+		//calendar.selectDate(cDate);
 	}
 
+	public void returnFecha(View view) {
+		Intent intent = new Intent();
+		intent.putExtra("fecha", calendar.getSelectedDate().getTime());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+	
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}

@@ -1,5 +1,6 @@
 package com.gastos.utils.fragments.gastos;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -273,9 +275,19 @@ public final class ReporteGastosMesFragment extends SherlockFragment {
 		
 		dp1.performClick();
 		
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(getActivity());
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		dbHelper.insertarGasto(
 				item.getNombre(),
-				dp1.getDate(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
 				costo,
 				item.getDescripcion(),
 				tipo,
@@ -326,7 +338,7 @@ public final class ReporteGastosMesFragment extends SherlockFragment {
 			cal.set(Calendar.MONTH, mes);
 
 			cDate = cal.getTime();
-			String fecha = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 
 			fDate = fecha;
 			lDate = new SimpleDateFormat("MMMM", loc_mx).format(cDate);

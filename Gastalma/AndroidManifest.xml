@@ -169,6 +169,11 @@
             android:label="@string/title_activity_gastos_calendario_mes"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.gastos.gastalma.IngresosCalendarioMesActivity"
+            android:label="@string/title_activity_ingress_calendario_mes"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

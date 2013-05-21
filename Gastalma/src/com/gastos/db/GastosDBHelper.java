@@ -354,6 +354,23 @@ public class GastosDBHelper {
 		return lista_ingresos;
 	}
 
+	public List<Ingreso> fetchIngresosSemana(String inicio, String fin) {
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha BETWEEN ? AND ?",
+				new String[] { inicio, fin }, null, null, null);
+		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
+		// Nos aseguramos de que existe al menos un registro
+		if (c.moveToFirst()) {
+			// Recorremos el cursor hasta que no haya más registros
+			do {
+				lista_ingresos.add(new Ingreso(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getInt(4)));
+			} while (c.moveToNext());
+		}
+
+		db.close();
+
+		return lista_ingresos;
+	}
+
 	public boolean insertarPago(double cantidad, String fecha, String hora) {
 
 		// Creamos el registro a insertar como objeto ContentValues

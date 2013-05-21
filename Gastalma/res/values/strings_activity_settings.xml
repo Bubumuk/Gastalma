@@ -1,11 +1,18 @@
 <resources>
 
     <!-- Strings related to Settings -->
-	<string-array name="locations">
+	<string-array name="locations_gastos">
         <item >Gastos por Día</item>
         <item >Gastos por Mes</item>
         <item >Gastos por Año</item>
         <item >Gastos por Semana</item>
+    </string-array>
+    
+	<string-array name="locations_ingresos">
+        <item >Ingresos por Día</item>
+        <item >Ingresos por Mes</item>
+        <item >Ingresos por Año</item>
+        <item >Ingresos por Semana</item>
     </string-array>
 
     <!-- General settings -->

@@ -49,7 +49,7 @@ public class IngresosActivity extends SherlockActivity {
 		loc_mx = new Locale("es","MX");
 		cDate = new Date();
 		fDate = new SimpleDateFormat("MMMM", loc_mx).format(cDate);
-		lDate = new SimpleDateFormat("dd/MM/yyyy", loc_mx).format(cDate);
+		lDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 		textDia = (TextView)findViewById(R.id.textView1);
 		textDia.setText(fDate.toUpperCase());
 		

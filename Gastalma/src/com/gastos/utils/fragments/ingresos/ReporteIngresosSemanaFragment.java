@@ -2,6 +2,7 @@ package com.gastos.utils.fragments.ingresos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -9,7 +10,13 @@ import java.util.Locale;
 import net.kapati.widgets.DatePicker;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -20,7 +27,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
@@ -30,13 +39,18 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.gastos.db.GastosDBHelper;
+import com.gastos.gastalma.AgregarGastoActivity;
 import com.gastos.gastalma.AgregarIngresoActivity;
+import com.gastos.gastalma.GastosCalendarioActivity;
 import com.gastos.gastalma.IngresosCalendarioActivity;
 import com.gastos.gastalma.R;
+import com.gastos.utils.Gasto;
+import com.gastos.utils.GastosAdapter;
 import com.gastos.utils.Ingreso;
 import com.gastos.utils.IngresosAdapter;
+import com.gastos.utils.fragments.ingresos.ReporteIngresosFragment;
 
-public final class ReporteIngresosAñoFragment extends SherlockFragment {
+public final class ReporteIngresosSemanaFragment extends SherlockFragment {
 	private String fDate;
 	private Date cDate;
 	private ListView listView;
@@ -44,11 +58,15 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 	private GastosDBHelper dbHelper;
 	private TextView text;
 	private SimpleDateFormat sdf;
+	private SharedPreferences prefs;
 	private String lDate;
 	private Locale loc_mx;
+	private Date start;
+	private Date end;
+	private String lDate2;
 
-    public static ReporteIngresosAñoFragment newInstance(int position) {
-        ReporteIngresosAñoFragment fragment = new ReporteIngresosAñoFragment();
+    public static ReporteIngresosSemanaFragment newInstance(int position) {
+    	ReporteIngresosSemanaFragment fragment = new ReporteIngresosSemanaFragment();
         return fragment;
     }
 
@@ -64,9 +82,13 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
         loc_mx = new Locale("es","MX");
         sdf = new SimpleDateFormat("yyyy-MM-dd");
 		fDate = sdf.format(cDate);
-		lDate = new SimpleDateFormat("yyyy", loc_mx).format(cDate);
 		
 		setHasOptionsMenu(true);
+		
+		calcularSemana();
+		
+		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(end);
+		lDate2 = new SimpleDateFormat("EEEE, d 'de' MMMM", loc_mx).format(start);
     }
 
 	@Override
@@ -77,7 +99,7 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 		text = new TextView(getActivity());
         text.setPadding(6, 6, 6, 6);
         text.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        text.setText(lDate);
+        text.setText(lDate2 + " al " + lDate);
         text.setBackgroundResource(R.color.abs__holo_blue_light);
         /*
         text.addTextChangedListener(new TextWatcher() {
@@ -111,16 +133,36 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
         //layout.addView(line);
         layout.addView(listView);
         
-        populateListaIngresosAño();
+        populateListaIngresosSemana();
         
         registerForContextMenu(listView);
 
         return layout;
     }
 	
-	private void populateListaIngresosAño() {
+	private void calcularSemana() {
+
+		// get today and clear time of day
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 0); // ! clear would not reset the
+											// hour of day !
+		cal.clear(Calendar.MINUTE);
+		cal.clear(Calendar.SECOND);
+		cal.clear(Calendar.MILLISECOND);
+
+		// get start of this week in milliseconds
+		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+
+		start = cal.getTime();
+
+		// start of the next week
+		cal.add(Calendar.DAY_OF_WEEK, 6);
+		end = cal.getTime();
+	}
+	
+	private void populateListaIngresosSemana() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosAño(fDate);
+		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosSemana(sdf.format(start), sdf.format(end));
 		
         adapter = new IngresosAdapter(getActivity(), R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);
@@ -134,15 +176,15 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 		/*menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
 		.setShowAsAction(com.actionbarsherlock.view.MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 		
-		/*menu.add(Menu.NONE, 4, Menu.NONE, "fecha")
+		menu.add(Menu.NONE, 3, Menu.NONE, "fecha")
     	.setIcon(R.drawable.ic_action_go_to_today)
-    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
+    	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		switch (item.getItemId()) {
-			case 4:
+			case 3:
 				//simulateTouchEvent();
 				ViewCalendarioIngresos();
 				break;
@@ -150,13 +192,36 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void ViewCalendarioIngresos() {
+	public void ViewCalendarioIngresos() {
 		Intent myIntent = new Intent(getActivity(), IngresosCalendarioActivity.class);
 		myIntent.putExtra("dia_seleccionado", cDate.getTime());
 		startActivityForResult(myIntent, 1);
 		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
 	}
+	
+	/*
+	@SuppressLint("Recycle")
+	private void simulateTouchEvent() {
+		// Obtain MotionEvent object
+		long downTime = SystemClock.uptimeMillis();
+		long eventTime = SystemClock.uptimeMillis() + 100;
+		float x = 0.0f;
+		float y = 0.0f;
+		// List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
+		int metaState = 0;
+		MotionEvent motionEvent = MotionEvent.obtain(
+		    downTime, 
+		    eventTime, 
+		    MotionEvent.ACTION_UP,
+		    x, 
+		    y, 
+		    metaState
+		);
 
+		// Dispatch touch event to view
+		text.dispatchTouchEvent(motionEvent);
+	}
+	*/
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
@@ -197,7 +262,7 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 			toast = Toast.makeText(getActivity(), "Elemento eliminado", Toast.LENGTH_SHORT);
 			toast.show();
 			adapter.remove((Ingreso)listView.getItemAtPosition(position));
-			adapter.notifyDataSetChanged();
+			adapter.notifyDataSetChanged();			
 		} else {
 			toast = Toast.makeText(getActivity(), "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
 			toast.show();
@@ -242,5 +307,20 @@ public final class ReporteIngresosAñoFragment extends SherlockFragment {
 	     bundle.putString("fecha", ingreso.getFecha());
 	   
 	     return bundle;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	    super.onActivityResult(requestCode, resultCode, intent);
+	    
+	    if(resultCode == Activity.RESULT_OK) {
+	    	long fecha_long = intent.getLongExtra("fecha", -1);
+    		cDate = new Date(fecha_long);
+			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+    		fDate = fecha;
+    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
+    		text.setText(lDate);
+	    	populateListaIngresosSemana();
+	    }
 	}
 }
