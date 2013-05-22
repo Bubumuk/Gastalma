@@ -36,13 +36,13 @@ import com.gastos.gastalma.AgregarIngresoActivity;
 import com.gastos.gastalma.IngresosCalendarioMesActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Ingreso;
-import com.gastos.utils.IngresosAdapter;
+import com.gastos.utils.ReporteIngresosMesAdapter;
 
 public final class ReporteIngresosMesFragment extends SherlockFragment {
 	private String fDate;
 	private Date cDate;
 	private ListView listView;
-	private IngresosAdapter adapter;
+	private ReporteIngresosMesAdapter adapter;
 	private GastosDBHelper dbHelper;
 	private TextView text;
 	private SimpleDateFormat sdf;
@@ -124,7 +124,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 		dbHelper.abrirLecturaBD(getActivity());
 		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosMes(fDate);
 		
-        adapter = new IngresosAdapter(getActivity(), R.layout.list_row, lista_ingresos);
+        adapter = new ReporteIngresosMesAdapter(getActivity(), R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);
 	}
 	
@@ -206,6 +206,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 		}
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private void copiarIngreso(int position) {
 		Toast toast;
 		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
@@ -246,6 +247,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	     return bundle;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 	    super.onActivityResult(requestCode, resultCode, intent);

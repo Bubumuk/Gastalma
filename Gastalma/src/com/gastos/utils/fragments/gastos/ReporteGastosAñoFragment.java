@@ -40,13 +40,13 @@ import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarGastoActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
-import com.gastos.utils.GastosAdapter;
+import com.gastos.utils.ReporteGastosMesAdapter;
 
 public final class ReporteGastosAñoFragment extends SherlockFragment {
 	private String fDate;
 	private Date cDate;
 	private ListView listView;
-	private GastosAdapter adapter;
+	private ReporteGastosMesAdapter adapter;
 	private GastosDBHelper dbHelper;
 	private TextView text;
 	private SimpleDateFormat sdf;
@@ -152,7 +152,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		dbHelper.abrirLecturaBD(getActivity());
 		List<Gasto> lista_gastos = dbHelper.fetchGastosAño(fDate);
         
-		adapter = new GastosAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
+		adapter = new ReporteGastosMesAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
 	}
 	
@@ -251,6 +251,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		}
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private void copiarGasto(int position) {
 		dbHelper.abrirEscrituraBD(getActivity());
 		Toast toast;

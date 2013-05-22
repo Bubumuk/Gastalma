@@ -153,6 +153,7 @@ public class AgregarIngresoActivity extends SherlockActivity {
 	}
 	
 	private void actualizarIngreso() {
+		
 		String fecha = dp1.getDate();
 		java.text.DateFormat df = DateFormat.getDateFormat(this);
 		Date f = null;
@@ -191,14 +192,6 @@ public class AgregarIngresoActivity extends SherlockActivity {
 		toast = Toast.makeText(getApplicationContext(), "Elemento agregado" , Toast.LENGTH_SHORT);
 		toast.show();
 		
-	}
-	
-	public void AgregarYReiniciar(View view) {
-		agregarIngreso();
-		rr.setChecked(true);
-		txt2.setText("");
-		txt3.setText("");
-		txt2.requestFocus();
 	}
 	
 	public boolean validarCampos() {

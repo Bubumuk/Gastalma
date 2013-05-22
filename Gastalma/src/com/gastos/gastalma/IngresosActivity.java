@@ -99,7 +99,7 @@ public class IngresosActivity extends SherlockActivity {
 	}
 	
 	private void populateListaIngresos() {
-		
+		dbHelper.abrirLecturaBD(this);
 		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosMes(lDate);
 		
         adapter = new IngresosAdapter(this,R.layout.list_row, lista_ingresos);
