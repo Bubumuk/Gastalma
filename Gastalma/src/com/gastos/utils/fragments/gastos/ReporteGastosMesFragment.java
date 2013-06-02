@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarGastoActivity;
 import com.gastos.gastalma.GastosCalendarioMesActivity;
@@ -82,43 +83,23 @@ public final class ReporteGastosMesFragment extends SherlockFragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		//text = (DatePicker)inflater.inflate(R.layout.datepicker, null);
-		//text.setDateFormat(DateFormat.getLongDateFormat(getActivity()));
 		text = new TextView(getActivity());
         text.setPadding(6, 6, 6, 6);
         text.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         text.setText(lDate);
         text.setBackgroundResource(R.color.abs__holo_blue_light);
-        /*
-        text.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            	fDate = text.getDate();
-            	populateListaGastosDia();
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });*/
         
         View line = new View(getActivity());
         line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
         line.setBackgroundColor(0xFF3C3C3C);
         
-        listView = new ListView(getActivity());
+        listView = new StickyListHeadersListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         layout.addView(text);
-        //layout.addView(line);
         layout.addView(listView);
         
         listView.setOnItemClickListener(new OnItemClickListener() {

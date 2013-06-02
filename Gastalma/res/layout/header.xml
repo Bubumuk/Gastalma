@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
 
     <TextView
         android:id="@+id/text1"
@@ -11,11 +13,14 @@
         android:layout_gravity="left"
         android:padding="5dp"
         android:textColor="@color/abs__holo_blue_light"
-        android:textIsSelectable="false" />
-    
-    <View android:layout_gravity="bottom"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/abs__holo_blue_light"/>
+        android:layout_gravity="bottom"
+        android:background="@color/abs__holo_blue_light" />
 
 </LinearLayout>
