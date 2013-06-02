@@ -1,19 +1,25 @@
 package com.gastos.gastalma;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import net.kapati.widgets.DatePicker;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -32,6 +38,7 @@ import com.gastos.db.GastosDBHelper;
 import com.gastos.utils.Gasto;
 import com.gastos.utils.GastosAdapter;
 
+@SuppressLint("SimpleDateFormat")
 public class GastosActivity extends SherlockActivity {
 	
 	private final int GASTO_AGREGADO = 1;
@@ -44,6 +51,7 @@ public class GastosActivity extends SherlockActivity {
 	private TextView textDia;
 	private Locale loc_mx;
 	private Date cDate;
+	private SharedPreferences prefs;
 
 	@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 	@Override
@@ -174,18 +182,71 @@ public class GastosActivity extends SherlockActivity {
 	        case R.id.eliminar:
 	            eliminarGasto(info.position);
 	            return true;
+	        case R.id.copiar:
+	            //copiarGasto(info.position);
+	            return true;
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
 	}
 	
+	private void copiarGasto(int position) {
+		dbHelper.abrirEscrituraBD(this);
+		Toast toast;
+		Gasto item = (Gasto)listView.getItemAtPosition(position);
+		
+		DatePicker dp1 = new DatePicker(this, null);
+		
+		double costo = Double.parseDouble(item.getCosto());
+		String tipo = item.getTipo();
+		boolean isChecked = item.getTipo().equals("Crédito") ? true : false;
+		
+		dp1.performClick();
+		
+		String fecha = dp1.getDate();
+		java.text.DateFormat df = DateFormat.getDateFormat(this);
+		Date f = null;
+		try {
+			f = df.parse(fecha);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		dbHelper.insertarGasto(
+				item.getNombre(),
+				new SimpleDateFormat("yyyy-MM-dd").format(f),
+				costo,
+				item.getDescripcion(),
+				tipo,
+				item.getHora());
+		
+		if(!isChecked) {
+			agregarDeuda(costo);
+		}
+		
+		toast = Toast.makeText(this, "Elemento copiado", Toast.LENGTH_SHORT);
+		toast.show();
+		
+		adapter.notifyDataSetChanged();
+	}
+	
+	private void agregarDeuda(double costo) {
+		prefs = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+		String deuda = prefs.getString("deuda", "0");
+		double deuda_nueva = Double.parseDouble(deuda) + costo;
+		
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("deuda", deuda_nueva + "");
+		editor.commit();
+	}
+
 	private void setupActionBar() {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 	
 	@SuppressLint("ResourceAsColor")
 	private void editarGasto(int info) {
-		dbHelper.abrirEscrituraBD(this);
 		Intent myIntent = new Intent(this, AgregarGastoActivity.class);
 		myIntent.putExtra("Gasto", bundleGasto((Gasto)listView.getItemAtPosition(info)));
 		myIntent.putExtra("editar", "editar");
@@ -196,14 +257,13 @@ public class GastosActivity extends SherlockActivity {
 		dbHelper.abrirEscrituraBD(this);
 		Toast toast;
 		Gasto item = (Gasto)listView.getItemAtPosition(position);
-		dbHelper.abrirLecturaBD(this);
 		if(dbHelper.eliminarGasto(item.getId())) {
-			toast = Toast.makeText(getApplicationContext(), "Elemento eliminado", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(this, "Elemento eliminado", Toast.LENGTH_SHORT);
 			toast.show();
 			adapter.remove((Gasto)listView.getItemAtPosition(position));
 			adapter.notifyDataSetChanged();
 		} else {
-			toast = Toast.makeText(getApplicationContext(), "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
+			toast = Toast.makeText(this, "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
@@ -255,7 +315,7 @@ public class GastosActivity extends SherlockActivity {
 	    	case FECHA_SELECCIONADA:
 	    		long fecha_long = intent.getLongExtra("fecha", -1);
 	    		cDate = new Date(fecha_long);
-				String fecha = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+				String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 	    		fDate = fecha;
 	    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
 	    		textDia.setText(lDate);

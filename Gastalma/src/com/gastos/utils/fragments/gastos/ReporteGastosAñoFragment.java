@@ -30,23 +30,23 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarGastoActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
-import com.gastos.utils.ReporteGastosMesAdapter;
+import com.gastos.utils.ReporteGastosAñoAdapter;
 
 public final class ReporteGastosAñoFragment extends SherlockFragment {
 	private String fDate;
 	private Date cDate;
-	private ListView listView;
-	private ReporteGastosMesAdapter adapter;
+	private StickyListHeadersListView listView;
+	private ReporteGastosAñoAdapter adapter;
 	private GastosDBHelper dbHelper;
 	private TextView text;
 	private SimpleDateFormat sdf;
@@ -108,7 +108,8 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
         line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
         line.setBackgroundColor(0xFF3C3C3C);
         
-        listView = new ListView(getActivity());
+        //listView = new ListView(getActivity());
+        listView = new StickyListHeadersListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         LinearLayout layout = new LinearLayout(getActivity());
@@ -152,7 +153,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		dbHelper.abrirLecturaBD(getActivity());
 		List<Gasto> lista_gastos = dbHelper.fetchGastosAño(fDate);
         
-		adapter = new ReporteGastosMesAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
+		adapter = new ReporteGastosAñoAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
 	}
 	

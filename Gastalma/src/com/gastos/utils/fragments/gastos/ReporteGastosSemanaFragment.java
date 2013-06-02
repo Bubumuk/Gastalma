@@ -2,6 +2,7 @@ package com.gastos.utils.fragments.gastos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +41,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarGastoActivity;
+import com.gastos.gastalma.CalendarioSemanaActivity;
 import com.gastos.gastalma.GastosCalendarioActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
@@ -211,7 +213,7 @@ public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	}
 	
 	public void ViewCalendarioGastos() {
-		Intent myIntent = new Intent(getActivity(), GastosCalendarioActivity.class);
+		Intent myIntent = new Intent(getActivity(), CalendarioSemanaActivity.class);
 		myIntent.putExtra("dia_seleccionado", cDate.getTime());
 		startActivityForResult(myIntent, 1);
 		//overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
@@ -355,12 +357,18 @@ public final class ReporteGastosSemanaFragment extends SherlockFragment {
 	    super.onActivityResult(requestCode, resultCode, intent);
 	    
 	    if(resultCode == Activity.RESULT_OK) {
-	    	long fecha_long = intent.getLongExtra("fecha", -1);
-    		cDate = new Date(fecha_long);
+	    	
+	    	long inicio = intent.getLongExtra("start", -1);
+	    	long fin = intent.getLongExtra("end", -1);
+	    	
+	    	start = new Date(inicio);
+	    	end = new Date(fin);
+	    	cDate = start;
 			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
     		fDate = fecha;
-    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
-    		text.setText(lDate);
+    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(end);
+    		lDate2 = new SimpleDateFormat("EEEE, d 'de' MMMM", loc_mx).format(start);
+    		text.setText(lDate2 + " al " + lDate);
 	    	populateListaGastosSemana();
 	    }
 	}

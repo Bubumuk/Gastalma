@@ -230,7 +230,7 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 	            eliminarGasto(info.position);
 	            return true;
 	        case R.id.copiar:
-	            copiarGasto(info.position);
+	            //copiarGasto(info.position);
 	            return true;
 	        default:
 	            return super.onContextItemSelected(item);
@@ -239,7 +239,6 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 	
 	@SuppressLint("ResourceAsColor")
 	private void editarGasto(int info) {
-		dbHelper.abrirEscrituraBD(getActivity());
 		Intent myIntent = new Intent(getActivity(), AgregarGastoActivity.class);
 		myIntent.putExtra("Gasto", bundleGasto((Gasto)listView.getItemAtPosition(info)));
 		myIntent.putExtra("editar", "editar");
@@ -327,13 +326,18 @@ public final class ReporteGastosDiaFragment extends SherlockFragment {
 	    super.onActivityResult(requestCode, resultCode, intent);
 	    
 	    if(resultCode == Activity.RESULT_OK) {
-	    	long fecha_long = intent.getLongExtra("fecha", -1);
-    		cDate = new Date(fecha_long);
-			String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
-    		fDate = fecha;
-    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
-    		text.setText(lDate);
-	    	populateListaGastosDia();
+	    	switch(requestCode) {
+	    	//TODO: Es diferente dependiendo de si es editar o calendario
+	    	case 1:
+	    		long fecha_long = intent.getLongExtra("fecha", -1);
+	    		cDate = new Date(fecha_long);
+				String fecha = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+	    		fDate = fecha;
+	    		lDate = new SimpleDateFormat("EEEE, d 'de' MMMM 'de' y", loc_mx).format(cDate);
+	    		text.setText(lDate);
+		    	populateListaGastosDia();
+	    	}
+	    	
 	    }
 	}
 }

@@ -112,8 +112,7 @@ public class GastosDBHelper {
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -124,15 +123,13 @@ public class GastosDBHelper {
 
 	public List<Gasto> fetchGastosHistorial() {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "", null, "nombre", null,
-				null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "", null, "nombre", null, null);
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -143,15 +140,13 @@ public class GastosDBHelper {
 
 	public List<Gasto> fetchGastosDia(String fecha) {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "fecha=?",
-				new String[] { fecha }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "fecha=?", new String[] { fecha }, null, null, null);
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -162,15 +157,13 @@ public class GastosDBHelper {
 
 	public List<Gasto> fetchGastosMes(String fecha) {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "mes=?",
-				new String[] { separarFechaN(fecha, 2) }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "mes=?", new String[] { separarFechaN(fecha, 2) }, null, null, null);
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -181,15 +174,13 @@ public class GastosDBHelper {
 
 	public List<Gasto> fetchGastosAño(String fecha) {
 
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "año=?",
-				new String[] { separarFechaN(fecha, 1) }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "año=?", new String[] { separarFechaN(fecha, 1) }, null, null, "fecha");
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -199,15 +190,13 @@ public class GastosDBHelper {
 	}
 
 	public List<Gasto> fetchGastosSemana(String inicio, String fin) {
-		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "fecha BETWEEN ? AND ?",
-				new String[] { inicio, fin }, null, null, null);
+		Cursor c = db.query("Gastos", new String[] { "nombre", "costo", "tipo", "descripcion", "fecha", "hora", "id" }, "fecha BETWEEN ? AND ?", new String[] { inicio, fin }, null, null, null);
 		List<Gasto> lista_gastos = new ArrayList<Gasto>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
 			// Recorremos el cursor hasta que no haya más registros
 			do {
-				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c
-						.getInt(6)));
+				lista_gastos.add(new Gasto(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getInt(6)));
 			} while (c.moveToNext());
 		}
 
@@ -302,8 +291,7 @@ public class GastosDBHelper {
 
 	public List<Ingreso> fetchIngresosDia(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha=?", new String[] { fecha }, null,
-				null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha=?", new String[] { fecha }, null, null, "fecha DESC");
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
@@ -320,8 +308,7 @@ public class GastosDBHelper {
 
 	public List<Ingreso> fetchIngresosMes(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "mes=?",
-				new String[] { separarFechaN(fecha, 2) }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "mes=?", new String[] { separarFechaN(fecha, 2) }, null, null, "fecha DESC");
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
@@ -338,8 +325,7 @@ public class GastosDBHelper {
 
 	public List<Ingreso> fetchIngresosAño(String fecha) {
 
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "año=?",
-				new String[] { separarFechaN(fecha, 1) }, null, null, "fecha DESC");
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "año=?", new String[] { separarFechaN(fecha, 1) }, null, null, "fecha");
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {
@@ -355,8 +341,7 @@ public class GastosDBHelper {
 	}
 
 	public List<Ingreso> fetchIngresosSemana(String inicio, String fin) {
-		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha BETWEEN ? AND ?",
-				new String[] { inicio, fin }, null, null, null);
+		Cursor c = db.query("Ingresos", new String[] { "cantidad", "descripcion", "fecha", "hora", "id" }, "fecha BETWEEN ? AND ?", new String[] { inicio, fin }, null, null, null);
 		List<Ingreso> lista_ingresos = new ArrayList<Ingreso>();
 		// Nos aseguramos de que existe al menos un registro
 		if (c.moveToFirst()) {

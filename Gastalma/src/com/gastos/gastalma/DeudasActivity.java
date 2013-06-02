@@ -201,7 +201,7 @@ public class DeudasActivity extends SherlockActivity {
 	@SuppressLint("SimpleDateFormat")
 	public String getDate() {
 		Date cDate = new Date();
-		String fDate = new SimpleDateFormat("dd/MM/yyyy").format(cDate);
+		String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
 		return fDate;
 	}
 	

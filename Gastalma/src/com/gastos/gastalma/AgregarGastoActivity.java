@@ -81,10 +81,10 @@ public class AgregarGastoActivity extends SherlockActivity {
 	     // Deconstruct the Bundle into the AttendeeObject
 	     Gasto gasto = unBundleGasto(extraGasto);
 	     
-	     String[] splitDate = gasto.getFecha().split("/");
-	     int year = Integer.parseInt(splitDate[2]);
+	     String[] splitDate = gasto.getFecha().split("-");
+	     int year = Integer.parseInt(splitDate[0]);
 	     int month = Integer.parseInt(splitDate[1]) - 1;
-	     int day = Integer.parseInt(splitDate[0]);
+	     int day = Integer.parseInt(splitDate[2]);
 	 
 	     // The AttendeeObject fields are now populated, so we set the texts
 	     ((DatePicker) findViewById(R.id.datePicker1)).setDate(year, month, day);
