@@ -1,12 +1,8 @@
 package com.gastos.utils;
 
-import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.gastos.gastalma.R;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,12 +14,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ReporteGastosAñoAdapter extends ArrayAdapter<Gasto> implements StickyListHeadersAdapter {
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.gastos.gastalma.R;
+
+public class ReporteGastosAñoAdapter extends ArrayAdapter<MesGastos> implements StickyListHeadersAdapter {
 
 	Context context;
 	NumberFormat nf;
 
-	public ReporteGastosAñoAdapter(Context context, int resourceId, List<Gasto> items) {
+	public ReporteGastosAñoAdapter(Context context, int resourceId, List<MesGastos> items) {
 		super(context, resourceId, items);
 		this.context = context;
 	}
@@ -37,7 +36,7 @@ public class ReporteGastosAñoAdapter extends ArrayAdapter<Gasto> implements Stic
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Gasto rowItem = getItem(position);
+		MesGastos rowItem = getItem(position);
 
 		nf = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -52,17 +51,16 @@ public class ReporteGastosAñoAdapter extends ArrayAdapter<Gasto> implements Stic
         } else
             holder = (ViewHolder) convertView.getTag();
 
-        holder.txtCant.setText(nf.format(Double.parseDouble(rowItem.getCosto())));
-        holder.txtNom.setText(rowItem.getNombre());
-        holder.txtDate.setText(rowItem.getFecha());
+        holder.txtCant.setText(nf.format(rowItem.getCosto()));
+        //holder.txtNom.setText(rowItem.getNombre());
+        //holder.txtDate.setText(rowItem.getFecha());
 
 		return convertView;
 	}
 	
 	@Override
 	public long getHeaderId(int position) {
-	    String fecha = getItem(position).getFecha();
-	    long mes = Long.parseLong(fecha.substring(5, 7));
+	    long mes = getItem(position).getMes();
 	    return mes;
 	}
 
@@ -74,7 +72,7 @@ public class ReporteGastosAñoAdapter extends ArrayAdapter<Gasto> implements Stic
 	@Override 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
 	    HeaderViewHolder holder;
-	    Gasto rowItem = getItem(position);
+	    MesGastos rowItem = getItem(position);
 	    
 	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 	    
@@ -87,8 +85,7 @@ public class ReporteGastosAñoAdapter extends ArrayAdapter<Gasto> implements Stic
 	        holder = (HeaderViewHolder) convertView.getTag();
 	    }
 	    
-	    int mes = Integer.parseInt(rowItem.getFecha().substring(5, 7));
-	    String headerText = DateFormatSymbols.getInstance(new Locale("es","MX")).getMonths()[mes-1];
+	    String headerText = rowItem.getMesString();
 	    holder.text1.setText(headerText);
 	    return convertView;
 	}

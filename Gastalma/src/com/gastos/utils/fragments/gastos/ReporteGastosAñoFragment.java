@@ -1,23 +1,14 @@
 package com.gastos.utils.fragments.gastos;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import net.kapati.widgets.DatePicker;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -31,15 +22,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gastos.db.GastosDBHelper;
-import com.gastos.gastalma.AgregarGastoActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Gasto;
+import com.gastos.utils.MesGastos;
 import com.gastos.utils.ReporteGastosAñoAdapter;
 
 public final class ReporteGastosAñoFragment extends SherlockFragment {
@@ -50,7 +40,6 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	private GastosDBHelper dbHelper;
 	private TextView text;
 	private SimpleDateFormat sdf;
-	private SharedPreferences prefs;
 	private String lDate;
 	private Locale loc_mx;
 
@@ -103,21 +92,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 			@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				Gasto gasto = (Gasto)parent.getItemAtPosition(position);
-				
-				String descripcion = gasto.getDescripcion().isEmpty() ? "No hay descripción" : gasto.getDescripcion();
-				
-				builder.setTitle(gasto.getNombre())
-					.setMessage(descripcion)
-					.setPositiveButton("Aceptar", new OnClickListener() {
-				        public void onClick(DialogInterface dialog, int which) {
-				            dialog.cancel();
-				        }
-				    });
-				
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				//TODO: Crear evento de click en un item
 			}
 		});
         
@@ -130,7 +105,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	
 	private void populateListaGastosAño() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Gasto> lista_gastos = dbHelper.fetchGastosAño(fDate);
+		List<MesGastos> lista_gastos = dbHelper.fetchGastosAñoPorMes(fDate);
         
 		adapter = new ReporteGastosAñoAdapter(getActivity(), android.R.layout.simple_list_item_2, lista_gastos);
 		listView.setAdapter(adapter);
@@ -159,29 +134,6 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	/*
-	@SuppressLint("Recycle")
-	private void simulateTouchEvent() {
-		// Obtain MotionEvent object
-		long downTime = SystemClock.uptimeMillis();
-		long eventTime = SystemClock.uptimeMillis() + 100;
-		float x = 0.0f;
-		float y = 0.0f;
-		// List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-		int metaState = 0;
-		MotionEvent motionEvent = MotionEvent.obtain(
-		    downTime, 
-		    eventTime, 
-		    MotionEvent.ACTION_UP,
-		    x, 
-		    y, 
-		    metaState
-		);
-
-		// Dispatch touch event to view
-		text.dispatchTouchEvent(motionEvent);
-	}
-	*/
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
@@ -193,7 +145,7 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    switch (item.getItemId()) {
-	        case R.id.editar:
+	        /*case R.id.editar:
 	            editarGasto(info.position);
 	            return true;
 	        case R.id.eliminar:
@@ -201,84 +153,10 @@ public final class ReporteGastosAñoFragment extends SherlockFragment {
 	            return true;
 	        case R.id.copiar:
 	            copiarGasto(info.position);
-	            return true;
+	            return true;*/
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
-	}
-	
-	@SuppressLint("ResourceAsColor")
-	private void editarGasto(int info) {
-		dbHelper.abrirEscrituraBD(getActivity());
-		Intent myIntent = new Intent(getActivity(), AgregarGastoActivity.class);
-		myIntent.putExtra("Gasto", bundleGasto((Gasto)listView.getItemAtPosition(info)));
-		myIntent.putExtra("editar", "editar");
-		startActivityForResult(myIntent, 1);
-	}
-	
-	private void eliminarGasto(int position) {
-		dbHelper.abrirEscrituraBD(getActivity());
-		Toast toast;
-		Gasto item = (Gasto)listView.getItemAtPosition(position);
-		if(dbHelper.eliminarGasto(item.getId())) {
-			toast = Toast.makeText(getActivity(), "Elemento eliminado", Toast.LENGTH_SHORT);
-			toast.show();
-			adapter.remove((Gasto)listView.getItemAtPosition(position));
-			adapter.notifyDataSetChanged();
-		} else {
-			toast = Toast.makeText(getActivity(), "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
-			toast.show();
-		}
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	private void copiarGasto(int position) {
-		dbHelper.abrirEscrituraBD(getActivity());
-		Toast toast;
-		Gasto item = (Gasto)listView.getItemAtPosition(position);
-		
-		DatePicker dp1 = new DatePicker(getActivity(), null);
-		
-		double costo = Double.parseDouble(item.getCosto());
-		String tipo = item.getTipo();
-		boolean isChecked = item.getTipo().equals("Crédito") ? true : false;
-		
-		dp1.performClick();
-		
-		String fecha = dp1.getDate();
-		java.text.DateFormat df = DateFormat.getDateFormat(getActivity());
-		Date f = null;
-		try {
-			f = df.parse(fecha);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		dbHelper.insertarGasto(
-				item.getNombre(),
-				new SimpleDateFormat("yyyy-MM-dd").format(f),
-				costo,
-				item.getDescripcion(),
-				tipo,
-				item.getHora());
-		
-		if(!isChecked) {
-			agregarDeuda(costo);
-		}
-		
-		toast = Toast.makeText(getActivity(), "Elemento copiado", Toast.LENGTH_SHORT);
-		toast.show();
-	}
-	
-	private void agregarDeuda(double costo) {
-		prefs = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-		String deuda = prefs.getString("deuda", "0");
-		double deuda_nueva = Double.parseDouble(deuda) + costo;
-		
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString("deuda", deuda_nueva + "");
-		editor.commit();
 	}
 
 	public Bundle bundleGasto(Gasto gasto){

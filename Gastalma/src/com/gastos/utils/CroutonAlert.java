@@ -1,5 +1,5 @@
 package com.gastos.utils;
-
+/*
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.view.Gravity;
@@ -27,4 +27,4 @@ public class CroutonAlert {
 		return style;
 	}
 
-}
+}*/

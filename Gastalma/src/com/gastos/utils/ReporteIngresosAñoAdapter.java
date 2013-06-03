@@ -1,12 +1,8 @@
 package com.gastos.utils;
 
-import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.gastos.gastalma.R;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -18,12 +14,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ReporteIngresosAñoAdapter extends ArrayAdapter<Ingreso> implements StickyListHeadersAdapter {
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.gastos.gastalma.R;
+
+public class ReporteIngresosAñoAdapter extends ArrayAdapter<MesGastos> implements StickyListHeadersAdapter {
 
 	Context context;
 	NumberFormat nf;
 
-	public ReporteIngresosAñoAdapter(Context context, int resourceId, List<Ingreso> items) {
+	public ReporteIngresosAñoAdapter(Context context, int resourceId, List<MesGastos> items) {
 		super(context, resourceId, items);
 		this.context = context;
 	}
@@ -31,65 +30,63 @@ public class ReporteIngresosAñoAdapter extends ArrayAdapter<Ingreso> implements 
 	/* private view holder class */
 	private class ViewHolder {
 		TextView txtCant;
-		TextView txtDesc;
-		TextView txtDate;
+		TextView txtNom;
+        TextView txtDate;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Ingreso rowItem = getItem(position);
+		MesGastos rowItem = getItem(position);
 
 		nf = NumberFormat.getCurrencyInstance(Locale.US);
 
-		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_row, null);
-			holder = new ViewHolder();
-			holder.txtCant = (TextView) convertView.findViewById(R.id.row_title);
-			holder.txtDesc = (TextView) convertView.findViewById(R.id.row_subtitle);
-			holder.txtDate = (TextView) convertView.findViewById(R.id.row_date);
-			convertView.setTag(holder);
-		} else
-			holder = (ViewHolder) convertView.getTag();
+		LayoutInflater mInflater = (LayoutInflater)context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.list_row, null);
+            holder = new ViewHolder();
+            holder.txtCant = (TextView) convertView.findViewById(R.id.row_title);
+            holder.txtNom = (TextView) convertView.findViewById(R.id.row_subtitle);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.row_date);
+            convertView.setTag(holder);
+        } else
+            holder = (ViewHolder) convertView.getTag();
 
-		holder.txtCant.setText(nf.format(Double.parseDouble(rowItem.getCantidad())));
-		holder.txtDesc.setText(rowItem.getDescripcion());
-		holder.txtDate.setText(rowItem.getFecha());
+        holder.txtCant.setText(nf.format(rowItem.getCosto()));
+        //holder.txtNom.setText(rowItem.getNombre());
+        //holder.txtDate.setText(rowItem.getFecha());
 
 		return convertView;
 	}
-
+	
 	@Override
 	public long getHeaderId(int position) {
-		String fecha = getItem(position).getFecha();
-		long mes = Long.parseLong(fecha.substring(5, 7));
-		return mes;
+	    long mes = getItem(position).getMes();
+	    return mes;
 	}
 
 	class HeaderViewHolder {
-		TextView text1;
+	    TextView text1;
 	}
-
+	
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	@Override
+	@Override 
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		HeaderViewHolder holder;
-		Ingreso rowItem = getItem(position);
-
-		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-
-		if (convertView == null) {
-			holder = new HeaderViewHolder();
-			convertView = mInflater.inflate(R.layout.header, parent, false);
-			holder.text1 = (TextView) convertView.findViewById(R.id.text1);
-			convertView.setTag(holder);
-		} else {
-			holder = (HeaderViewHolder) convertView.getTag();
-		}
-
-		int mes = Integer.parseInt(rowItem.getFecha().substring(5, 7));
-		String headerText = DateFormatSymbols.getInstance(new Locale("es", "MX")).getMonths()[mes - 1];
-		holder.text1.setText(headerText);
-		return convertView;
+	    HeaderViewHolder holder;
+	    MesGastos rowItem = getItem(position);
+	    
+	    LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+	    
+	    if (convertView == null) {
+	        holder = new HeaderViewHolder();
+	        convertView = mInflater.inflate(R.layout.header, parent, false);
+	        holder.text1 = (TextView) convertView.findViewById(R.id.text1);
+	        convertView.setTag(holder);
+	    } else {
+	        holder = (HeaderViewHolder) convertView.getTag();
+	    }
+	    
+	    String headerText = rowItem.getMesString();
+	    holder.text1.setText(headerText);
+	    return convertView;
 	}
 }

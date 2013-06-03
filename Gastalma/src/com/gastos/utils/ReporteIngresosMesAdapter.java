@@ -1,16 +1,11 @@
 package com.gastos.utils;
 
-import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.gastos.gastalma.R;
-import com.gastos.utils.ReporteIngresosAñoAdapter.HeaderViewHolder;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -23,12 +18,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements StickyListHeadersAdapter {
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
+import com.gastos.gastalma.R;
+
+public class ReporteIngresosMesAdapter extends ArrayAdapter<MesGastos> implements StickyListHeadersAdapter {
 
 	Context context;
 	NumberFormat nf;
 
-	public ReporteIngresosMesAdapter(Context context, int resourceId, List<Ingreso> items) {
+	public ReporteIngresosMesAdapter(Context context, int resourceId, List<MesGastos> items) {
 		super(context, resourceId, items);
 		this.context = context;
 	}
@@ -36,14 +34,14 @@ public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements 
 	/* private view holder class */
 	private class ViewHolder {
 		TextView txtCant;
-		TextView txtDesc;
+		TextView txtNom;
 		TextView txtDate;
 		TextView txtHour;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Ingreso rowItem = getItem(position);
+		MesGastos rowItem = getItem(position);
 
 		nf = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -52,26 +50,25 @@ public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements 
 			convertView = mInflater.inflate(R.layout.list_row_mes, null);
 			holder = new ViewHolder();
 			holder.txtCant = (TextView) convertView.findViewById(R.id.row_title);
-			holder.txtDesc = (TextView) convertView.findViewById(R.id.row_subtitle);
+			holder.txtNom = (TextView) convertView.findViewById(R.id.row_subtitle);
 			holder.txtDate = (TextView) convertView.findViewById(R.id.row_date);
 			holder.txtHour = (TextView) convertView.findViewById(R.id.row_hour);
 			convertView.setTag(holder);
 		} else
 			holder = (ViewHolder) convertView.getTag();
 
-		holder.txtCant.setText(nf.format(Double.parseDouble(rowItem.getCantidad())));
-		holder.txtDesc.setText(rowItem.getDescripcion());
+		holder.txtCant.setText(nf.format(rowItem.getCosto()));
+		//holder.txtNom.setText(rowItem.getNombre());
 		//holder.txtDate.setText(rowItem.getFecha());
-		holder.txtHour.setText(formatHour(rowItem.getHora()));
+		//holder.txtHour.setText(formatHour(rowItem.getHora()));
 
 		return convertView;
 	}
 	
 	@Override
 	public long getHeaderId(int position) {
-		String fecha = getItem(position).getFecha();
-		long mes = Long.parseLong(fecha.substring(8, 10));
-		return mes;
+		long dia = getItem(position).getMes();
+		return dia;
 	}
 
 	class HeaderViewHolder {
@@ -82,7 +79,7 @@ public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements 
 	@Override
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
 		HeaderViewHolder holder;
-		Ingreso rowItem = getItem(position);
+		MesGastos rowItem = getItem(position);
 
 		LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
@@ -95,15 +92,7 @@ public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements 
 			holder = (HeaderViewHolder) convertView.getTag();
 		}
 
-		String fecha = rowItem.getFecha();
-		Date d = new Date(fecha.replace("-", "/"));
-		
-		int dia = separarFechaN(fecha, 1);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-		String dayOfTheWeek = sdf.format(d);
-
-		String headerText = dayOfTheWeek + " " + dia;
+		String headerText = rowItem.getMesString() + " " + rowItem.getMes();
 		holder.text1.setText(headerText);
 		return convertView;
 	}
@@ -119,17 +108,5 @@ public class ReporteIngresosMesAdapter extends ArrayAdapter<Ingreso> implements 
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
 		return sdf.format(date);
-	}
-	
-	private int separarFechaN(String fecha, int caso) {
-		switch (caso) {
-		case 3: // año
-			return Integer.parseInt(fecha.substring(0, fecha.indexOf("-")));
-		case 2: // mes
-			return Integer.parseInt(fecha.substring(fecha.indexOf("-") + 1, fecha.lastIndexOf("-")));
-		case 1: // dia
-			return Integer.parseInt(fecha.substring(fecha.lastIndexOf("-") + 1));
-		}
-		return 0;
 	}
 }

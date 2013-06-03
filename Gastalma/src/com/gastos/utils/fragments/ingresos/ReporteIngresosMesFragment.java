@@ -31,11 +31,13 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
+import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gastos.db.GastosDBHelper;
 import com.gastos.gastalma.AgregarIngresoActivity;
 import com.gastos.gastalma.IngresosCalendarioMesActivity;
 import com.gastos.gastalma.R;
 import com.gastos.utils.Ingreso;
+import com.gastos.utils.MesGastos;
 import com.gastos.utils.ReporteIngresosMesAdapter;
 
 public final class ReporteIngresosMesFragment extends SherlockFragment {
@@ -103,7 +105,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
         line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 3));
         line.setBackgroundColor(0xFF3C3C3C);
         
-        listView = new ListView(getActivity());
+        listView = new StickyListHeadersListView(getActivity());
         listView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         LinearLayout layout = new LinearLayout(getActivity());
@@ -122,7 +124,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	
 	private void populateListaIngresosMes() {
 		dbHelper.abrirLecturaBD(getActivity());
-		List<Ingreso> lista_ingresos = dbHelper.fetchIngresosMes(fDate);
+		List<MesGastos> lista_ingresos = dbHelper.fetchIngresosMesPorDia(fDate);
 		
         adapter = new ReporteIngresosMesAdapter(getActivity(), R.layout.list_row, lista_ingresos);
         listView.setAdapter(adapter);
@@ -170,7 +172,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	public boolean onContextItemSelected(MenuItem item) {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    switch (item.getItemId()) {
-	        case R.id.editar:
+	        /*case R.id.editar:
 	            editarIngreso(info.position);
 	            return true;
 	        case R.id.eliminar:
@@ -178,73 +180,10 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
 	            return true;
 	        case R.id.copiar:
 	            copiarIngreso(info.position);
-	            return true;
+	            return true;*/
 	        default:
 	            return super.onContextItemSelected(item);
 	    }
-	}
-	
-	@SuppressLint("ResourceAsColor")
-	private void editarIngreso(int info) {
-		Intent myIntent = new Intent(getActivity(), AgregarIngresoActivity.class);
-		myIntent.putExtra("Ingreso", bundleIngreso((Ingreso)listView.getItemAtPosition(info)));
-		myIntent.putExtra("editar", "editar");
-		startActivityForResult(myIntent, 1);
-	}
-	
-	private void eliminarIngreso(int position) {
-		Toast toast;
-		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
-		if(dbHelper.eliminarIngreso(item.getId())) {
-			toast = Toast.makeText(getActivity(), "Elemento eliminado", Toast.LENGTH_SHORT);
-			toast.show();
-			adapter.remove((Ingreso)listView.getItemAtPosition(position));
-			adapter.notifyDataSetChanged();
-		} else {
-			toast = Toast.makeText(getActivity(), "ERROR al eliminar elemento", Toast.LENGTH_SHORT);
-			toast.show();
-		}
-	}
-	
-	@SuppressLint("SimpleDateFormat")
-	private void copiarIngreso(int position) {
-		Toast toast;
-		Ingreso item = (Ingreso)listView.getItemAtPosition(position);
-		
-		DatePicker dp1 = new DatePicker(getActivity(), null);
-		
-		double cantidad = Double.parseDouble(item.getCantidad());
-		
-		dp1.performClick();
-		
-		String fecha = dp1.getDate();
-		java.text.DateFormat df = DateFormat.getDateFormat(getActivity());
-		Date f = null;
-		try {
-			f = df.parse(fecha);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		dbHelper.insertarIngreso(
-				cantidad,
-				new SimpleDateFormat("yyyy-MM-dd").format(f),
-				item.getDescripcion(),
-				item.getHora());
-		
-		toast = Toast.makeText(getActivity(), "Elemento copiado", Toast.LENGTH_SHORT);
-		toast.show();
-	}
-
-	public Bundle bundleIngreso(Ingreso ingreso){
-	     Bundle bundle = new Bundle();
-	     bundle.putInt("id", ingreso.getId());
-	     bundle.putString("cantidad", ingreso.getCantidad());
-	     bundle.putString("descripcion", ingreso.getDescripcion());
-	     bundle.putString("fecha", ingreso.getFecha());
-	   
-	     return bundle;
 	}
 	
 	@SuppressLint("SimpleDateFormat")
