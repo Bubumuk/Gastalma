@@ -59,7 +59,7 @@ public class DeudasActivity extends SherlockActivity {
 		
 		setupActionBar();
 		
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(this);
         
         nf = (DecimalFormat)NumberFormat.getCurrencyInstance(Locale.US);

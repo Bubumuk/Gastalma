@@ -58,7 +58,7 @@ public final class ReporteGastosMesFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        dbHelper = new GastosDBHelper();
+        dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(getActivity());
         
         cDate = new Date();

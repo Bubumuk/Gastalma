@@ -57,7 +57,7 @@ public class AgregarIngresoActivity extends SherlockActivity {
 		
 		txt2.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(8,2)});
 		
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirEscrituraBD(this);
         
         if(getIntent().getExtras() != null)

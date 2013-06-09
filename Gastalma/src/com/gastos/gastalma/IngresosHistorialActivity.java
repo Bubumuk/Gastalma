@@ -55,7 +55,7 @@ public class IngresosHistorialActivity extends SherlockActivity {
 			}
 		});
 		
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(this);
         
         populateListaIngresos();

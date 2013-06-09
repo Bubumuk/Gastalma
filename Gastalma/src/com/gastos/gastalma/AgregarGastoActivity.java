@@ -64,7 +64,7 @@ public class AgregarGastoActivity extends SherlockActivity {
 		// Show the done-discard action bar.
 		setupActionBar();
 		
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirEscrituraBD(this);
         
         if(getIntent().getExtras() != null)

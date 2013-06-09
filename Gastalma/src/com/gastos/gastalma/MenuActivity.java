@@ -21,7 +21,7 @@ public class MenuActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
 		dbHelper.abrirLecturaBD(this);
 	}
 

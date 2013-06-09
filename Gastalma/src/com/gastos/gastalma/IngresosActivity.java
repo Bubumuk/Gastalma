@@ -55,7 +55,7 @@ public class IngresosActivity extends SherlockActivity {
 		
 		listView = (ListView)findViewById(R.id.listView1);
         
-        dbHelper = new GastosDBHelper();
+        dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(this);
         
         populateListaIngresos();

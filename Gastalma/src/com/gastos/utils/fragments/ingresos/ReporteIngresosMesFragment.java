@@ -1,20 +1,17 @@
 package com.gastos.utils.fragments.ingresos;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import net.kapati.widgets.DatePicker;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -27,16 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.gastos.db.GastosDBHelper;
-import com.gastos.gastalma.AgregarIngresoActivity;
 import com.gastos.gastalma.IngresosCalendarioMesActivity;
 import com.gastos.gastalma.R;
-import com.gastos.utils.Ingreso;
 import com.gastos.utils.MesGastos;
 import com.gastos.utils.ReporteIngresosMesAdapter;
 
@@ -61,7 +55,7 @@ public final class ReporteIngresosMesFragment extends SherlockFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        dbHelper = new GastosDBHelper();
+        dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(getActivity());
         
         cDate = new Date();

@@ -30,7 +30,7 @@ public class PagosHistorialActivity extends SherlockActivity {
 		
 		listView.setEmptyView(findViewById(R.id.textViewEmpty));
 		
-		dbHelper = new GastosDBHelper();
+		dbHelper = GastosDBHelper.getInstance();
         dbHelper.abrirLecturaBD(this);
         
         populateListaPagos();

@@ -23,6 +23,18 @@ import com.gastos.utils.Pago;
 public class GastosDBHelper {
 
 	private SQLiteDatabase db;
+	private static GastosDBHelper dbHelper;
+	
+	private GastosDBHelper() {
+		
+	}
+	
+	public static GastosDBHelper getInstance() {
+		if (dbHelper == null) {
+			dbHelper = new GastosDBHelper();
+		}
+		return dbHelper;
+	}
 
 	public void abrirLecturaBD(Activity ga) {
 		// Abrimos la base de datos 'DBUsuarios' en modo escritura
